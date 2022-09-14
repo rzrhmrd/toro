@@ -2,6 +2,7 @@ package com.rzmmzdh.toro.feature_note.data.repository
 
 import com.rzmmzdh.toro.feature_note.data.datasource.NoteDataSource
 import com.rzmmzdh.toro.feature_note.domain.model.Note
+import com.rzmmzdh.toro.feature_note.domain.repository.NoteRepository
 import javax.inject.Inject
 
 class NoteRepositoryImpl @Inject constructor(private val localDataSource: NoteDataSource) :
