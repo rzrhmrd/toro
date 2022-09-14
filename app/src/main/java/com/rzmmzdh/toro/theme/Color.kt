@@ -1,4 +1,4 @@
-package com.rzmmzdh.toro.ui.theme
+package com.rzmmzdh.toro.theme
 
 import androidx.compose.ui.graphics.Color
 

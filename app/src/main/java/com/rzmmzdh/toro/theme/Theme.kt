@@ -1,4 +1,4 @@
-package com.rzmmzdh.toro.ui.theme
+package com.rzmmzdh.toro.theme
 
 import android.app.Activity
 import android.os.Build
