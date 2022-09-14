@@ -13,4 +13,8 @@ class LocalDataSource @Inject constructor(private val noteDao: NoteDao) : NoteDa
     override fun getNote(id: Int): Flow<Note> {
         return noteDao.getNote(id)
     }
+
+    override fun getAllNotes(): Flow<List<Note>> {
+        return noteDao.getAllNotes()
+    }
 }

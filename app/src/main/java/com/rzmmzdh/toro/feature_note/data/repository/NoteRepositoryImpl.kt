@@ -15,4 +15,8 @@ class NoteRepositoryImpl @Inject constructor(private val localDataSource: NoteDa
     override fun getNote(id: Int): Flow<Note> {
         return localDataSource.getNote(id)
     }
+
+    override fun getAllNotes(): Flow<List<Note>> {
+        return localDataSource.getAllNotes()
+    }
 }

@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface NoteDataSource {
     suspend fun insertNote(note: Note)
     fun getNote(id: Int): Flow<Note>
+    fun getAllNotes(): Flow<List<Note>>
 }
