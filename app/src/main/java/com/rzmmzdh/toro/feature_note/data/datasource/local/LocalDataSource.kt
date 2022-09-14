@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val noteDao: NoteDao) : NoteDataSource {
     override suspend fun insertNote(note: Note) {
-        noteDao.insetNote(note)
+        noteDao.insertNote(note)
     }
 
     override fun getNote(id: Int): Flow<Note> {
