@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class LocalDataSource @Inject constructor(private val noteDao: NoteDao) : NoteDataSource {
     override suspend fun insertNote(note: Note) {
-        TODO("Not yet implemented")
+        noteDao.insetNote(note)
     }
 }
