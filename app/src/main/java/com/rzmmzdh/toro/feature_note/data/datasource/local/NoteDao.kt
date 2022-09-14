@@ -9,4 +9,5 @@ interface NoteDao {
     suspend fun insertNote(note: Note)
     fun getNote(id: Int): Flow<Note>
     fun getAllNotes(): Flow<List<Note>>
+    fun deleteNote(note: Note)
 }
