@@ -24,4 +24,8 @@ class LocalDataSource @Inject constructor(private val noteDao: NoteDao) : NoteDa
     override suspend fun deleteNote(note: Note) {
         noteDao.deleteNote(note.toNoteEntity())
     }
+
+    override suspend fun deleteAllNotes() {
+        noteDao.deleteAllNotes()
+    }
 }

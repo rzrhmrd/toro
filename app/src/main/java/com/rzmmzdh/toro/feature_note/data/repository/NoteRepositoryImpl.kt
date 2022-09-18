@@ -23,4 +23,8 @@ class NoteRepositoryImpl @Inject constructor(private val localDataSource: NoteDa
     override suspend fun deleteNote(note: Note) {
         localDataSource.deleteNote(note)
     }
+
+    override suspend fun deleteAllNotes() {
+        localDataSource.deleteAllNotes()
+    }
 }
