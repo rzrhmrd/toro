@@ -19,7 +19,7 @@ class HomeScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             repeat(12) {
-                val sampleNote = Note(Random().nextInt(48), "Title", "Body", Date())
+                val sampleNote = Note(Random().nextInt(48), "عنوان", "متن", Date())
                 noteUseCases.insertNote(sampleNote)
             }
             noteUseCases.getAllNotes().collectLatest {
@@ -35,7 +35,7 @@ class HomeScreenViewModel @Inject constructor(
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
             HomeScreenEvent.AddNewNote -> {
-                val sampleNewNote = Note(Random().nextInt(), "a new title", "a new body", Date())
+                val sampleNewNote = Note(Random().nextInt(), "عنوان", "متن", Date())
                 viewModelScope.launch {
                     noteUseCases.insertNote(sampleNewNote)
                 }
