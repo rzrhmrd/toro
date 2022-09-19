@@ -2,11 +2,20 @@ package com.rzmmzdh.toro.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.rzmmzdh.toro.R
 
 // Set of Material typography styles to start with
+val vazirFontFamily = FontFamily(
+    Font(R.font.vazir_regular, FontWeight.Normal),
+    Font(R.font.vazir_medium, FontWeight.Medium),
+    Font(R.font.vazir_light, FontWeight.Light),
+    Font(R.font.vazir_bold, FontWeight.Bold),
+    Font(R.font.vazir_black, FontWeight.Black)
+)
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
