@@ -11,9 +11,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rzmmzdh.toro.feature_note.viewmodel.HomeScreenViewModel
+import com.rzmmzdh.toro.theme.vazirFontFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +37,16 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = h
 @Composable
 fun MainTopBar(viewModel: HomeScreenViewModel) {
     CenterAlignedTopAppBar(
-        title = { Text("toro") },
+        title = {
+            Text(
+                "تورو",
+                style = TextStyle(
+                    fontFamily = vazirFontFamily,
+                    fontWeight = FontWeight.Black,
+                    fontSize = 24.sp
+                )
+            )
+        },
         actions = {
             IconButton(onClick = { viewModel.onEvent(HomeScreenEvent.DeleteAllNotes) }) {
                 Icon(Icons.Rounded.Delete, "delete all notes")
@@ -77,9 +90,21 @@ fun NoteList(
                     ) {
                         Text(
                             viewModel.noteList.value.notes[index].title,
+                            style = TextStyle(
+                                fontFamily = vazirFontFamily,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         )
                         Text(
                             viewModel.noteList.value.notes[index].body,
+                            style =
+                            TextStyle(
+                                fontFamily = vazirFontFamily,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal
+                            )
+
                         )
                     }
 
