@@ -7,8 +7,13 @@ import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -27,9 +32,42 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeScreenViewModel = h
         floatingActionButton = {
             AddNoteFab(viewModel)
         },
-        topBar = { MainTopBar(viewModel) }
+        topBar = { MainTopBar(viewModel) },
+        bottomBar = {
+            MainNavigationBar()
+        }
     ) { paddingValues ->
         NoteList(paddingValues, viewModel)
+    }
+}
+
+@Composable
+fun MainNavigationBar() {
+    val selectedDestination by remember {
+        mutableStateOf(Destination.HomeScreen)
+    }
+    val items = listOf(Destination.HomeScreen, Destination.Settings)
+    NavigationBar(modifier = Modifier) {
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                selected = selectedDestination == item,
+                onClick = { /*TODO*/ },
+                icon = {
+                    when (item) {
+                        Destination.Settings -> Icon(
+                            Icons.Rounded.Settings,
+                            "settings screen navigation item"
+                        )
+                        Destination.HomeScreen -> Icon(
+                            Icons.Rounded.Home,
+                            "home screen navigation item"
+                        )
+
+
+                    }
+                },
+            )
+        }
     }
 }
 
@@ -62,62 +100,68 @@ fun NoteList(
     viewModel: HomeScreenViewModel,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding(),
+                start = 8.dp,
+                end = 8.dp
+            ),
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    start = 8.dp,
-                    end = 8.dp
-                ),
-        ) {
-            itemsIndexed(items = viewModel.noteList.value.notes) { index, note ->
-                Card(
-                    modifier = Modifier
-                        .size(192.dp)
-                        .padding(all = 8.dp),
-                    onClick = { /*TODO*/ }
+        itemsIndexed(items = viewModel.noteList.value.notes) { index, note ->
+            Card(
+                modifier = Modifier
+                    .size(192.dp)
+                    .padding(all = 8.dp),
+                onClick = { /*TODO*/ }
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            viewModel.noteList.value.notes[index].title,
-                            style = TextStyle(
-                                fontFamily = vazirFontFamily,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                    Text(
+                        viewModel.noteList.value.notes[index].title,
+                        style = TextStyle(
+                            fontFamily = vazirFontFamily,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
                         )
-                        Text(
-                            viewModel.noteList.value.notes[index].body,
-                            style =
-                            TextStyle(
-                                fontFamily = vazirFontFamily,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Normal
-                            )
-
+                    )
+                    Text(
+                        viewModel.noteList.value.notes[index].body,
+                        style =
+                        TextStyle(
+                            fontFamily = vazirFontFamily,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Normal
                         )
-                    }
 
+                    )
                 }
+
             }
         }
-
     }
 }
 
 @Composable
 fun AddNoteFab(viewModel: HomeScreenViewModel) {
-    FloatingActionButton(onClick = { viewModel.onEvent(HomeScreenEvent.AddNewNote) }) {
-        Icon(Icons.Rounded.Add, contentDescription = "Add a new note")
-    }
+    ExtendedFloatingActionButton(
+        onClick = { viewModel.onEvent(HomeScreenEvent.AddNewNote) },
+        icon = { Icon(Icons.Rounded.Add, "add note fab") },
+        text = {
+            Text(
+                "یادداشت",
+                style = TextStyle(
+                    fontFamily = vazirFontFamily,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+            )
+        }
+    )
 }
