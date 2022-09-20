@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">TORO</string>
+    <string name="ok">اوکی</string>
+    <string name="save_note_fab">save note fab</string>
+    <string name="toro">تورو</string>
+    <string name="home_screen_icon">home screen icon</string>
+    <string name="edit_note_icon">edit note icon</string>
+    <string name="new_note">یادداشت جدید</string>
+    <string name="title">عنوان</string>
+    <string name="body">متن</string>
+    <string name="settings_icon">settings icon</string>
+    <string name="hello_world">سلام دنیا!</string>
+    <string name="settings">تنظیمات</string>
 </resources>
