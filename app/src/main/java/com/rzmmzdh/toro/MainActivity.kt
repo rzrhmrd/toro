@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.rzmmzdh.toro.feature_note.ui.Destination
+import com.rzmmzdh.toro.feature_note.ui.EditNoteScreen
 import com.rzmmzdh.toro.feature_note.ui.HomeScreen
+import com.rzmmzdh.toro.feature_note.ui.SettingsScreen
+import com.rzmmzdh.toro.feature_note.ui.core.Screens
 import com.rzmmzdh.toro.theme.TOROTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,10 +31,16 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Destination.HomeScreen.route
+                        startDestination = Screens.Home.route
                     ) {
-                        composable(Destination.HomeScreen.route) {
-                            HomeScreen()
+                        composable(Screens.Home.route) {
+                            HomeScreen(navController = navController)
+                        }
+                        composable(Screens.EditNote.route) {
+                            EditNoteScreen(navController = navController)
+                        }
+                        composable(Screens.Settings.route) {
+                            SettingsScreen(navController = navController)
                         }
                     }
                 }
