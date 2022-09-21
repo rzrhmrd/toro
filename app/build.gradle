@@ -78,9 +78,11 @@ dependencies {
     def nav_version = "2.5.2"
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
-    //KotlinX Date Time
+    //KotlinX DateTime
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 
     //Preferences
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation  "androidx.datastore:datastore-core:1.0.0"
+
 }
