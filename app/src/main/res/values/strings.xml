@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TORO</string>
     <string name="ok">اوکی</string>
+    <string name="save">ذخیره</string>
     <string name="save_note_fab">save note fab</string>
     <string name="toro">تورو</string>
     <string name="home_screen_icon">home screen icon</string>
