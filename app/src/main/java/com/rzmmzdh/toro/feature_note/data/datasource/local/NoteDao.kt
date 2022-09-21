@@ -11,7 +11,7 @@ interface NoteDao {
     @Query("SELECT * FROM noteentity WHERE id = :id")
     fun getNote(id: Int): Flow<NoteEntity>
 
-    @Query("SELECT * FROM noteentity")
+    @Query("SELECT * FROM noteentity ORDER BY lastModificationDate DESC")
     fun getAllNotes(): Flow<List<NoteEntity>>
 
     @Delete
