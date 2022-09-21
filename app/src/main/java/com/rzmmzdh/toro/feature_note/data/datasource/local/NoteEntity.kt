@@ -7,11 +7,11 @@ import kotlinx.datetime.Instant
 
 @Entity
 data class NoteEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val body: String,
     val lastModificationDate: Instant
 )
 
-fun NoteEntity.toNote() =
+fun NoteEntity.asNote() =
     Note(id = id, title = title, body = body, lastModificationDate = lastModificationDate)

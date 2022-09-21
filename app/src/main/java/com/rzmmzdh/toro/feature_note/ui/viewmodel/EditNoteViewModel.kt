@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class EditNoteViewModel @Inject constructor(private val noteUseCases: NoteUseCases) : ViewModel() {
@@ -23,7 +22,6 @@ class EditNoteViewModel @Inject constructor(private val noteUseCases: NoteUseCas
             when (event) {
                 is EditNoteEvent.SaveNote -> {
                     val note = Note(
-                        id = Random.nextInt(),
                         title = titleText.value,
                         body = bodyText.value,
                         lastModificationDate = Instant.fromEpochMilliseconds(1)
