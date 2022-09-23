@@ -15,7 +15,7 @@ interface NoteDao {
     fun getAllNotes(): Flow<List<NoteEntity>>
 
     @Delete
-    fun deleteNote(note: NoteEntity)
+    suspend fun deleteNote(note: NoteEntity)
 
     @Query("DELETE FROM noteentity")
     suspend fun deleteAllNotes()
