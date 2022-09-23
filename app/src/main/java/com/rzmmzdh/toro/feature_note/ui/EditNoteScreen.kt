@@ -37,13 +37,13 @@ fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController
             )
         }
     ) { paddingValues ->
-        EditNote(paddingValues = paddingValues, viewModel)
+        EditNoteBody(paddingValues = paddingValues, viewModel)
 
     }
 }
 
 @Composable
-fun EditNote(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
+fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,8 +54,8 @@ fun EditNote(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TitleTextField(viewModel)
-        BodyTextField(viewModel)
+        TitleTextInput(viewModel)
+        BodyTextInput(viewModel)
     }
     EmptyInputError(viewModel)
 
@@ -66,9 +66,6 @@ fun EmptyInputError(viewModel: EditNoteViewModel) {
     if (viewModel.openDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onDismissRequest.
                 viewModel.openDialog.value = !viewModel.openDialog.value
             },
             icon = { Icon(Icons.Rounded.Info, null) },
@@ -81,6 +78,7 @@ fun EmptyInputError(viewModel: EditNoteViewModel) {
                         fontSize = MaterialTheme.typography.headlineSmall.fontSize,
                         fontWeight = MaterialTheme.typography.headlineLarge.fontWeight
                     ),
+                    textAlign = TextAlign.Center,
                 )
             },
             confirmButton = {
@@ -103,7 +101,7 @@ fun EmptyInputError(viewModel: EditNoteViewModel) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun TitleTextField(viewModel: EditNoteViewModel) {
+fun TitleTextInput(viewModel: EditNoteViewModel) {
     TextField(
         value = viewModel.titleText.value,
         onValueChange = { viewModel.onEvent(EditNoteEvent.OnTitleChanged(it)) },
@@ -137,7 +135,7 @@ fun TitleTextField(viewModel: EditNoteViewModel) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun BodyTextField(viewModel: EditNoteViewModel) {
+fun BodyTextInput(viewModel: EditNoteViewModel) {
     TextField(
         value = viewModel.bodyText.value,
         onValueChange = { viewModel.onEvent(EditNoteEvent.OnBodyChanged(it)) },
