@@ -28,4 +28,8 @@ class LocalDataSource @Inject constructor(private val noteDao: NoteDao) : NoteDa
     override suspend fun deleteAllNotes() {
         noteDao.deleteAllNotes()
     }
+
+    override fun searchNotes(query: String): Flow<List<Note>> {
+        return noteDao.searchNotes(query)
+    }
 }

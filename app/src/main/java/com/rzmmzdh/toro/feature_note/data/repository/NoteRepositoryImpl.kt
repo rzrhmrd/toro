@@ -27,4 +27,8 @@ class NoteRepositoryImpl @Inject constructor(private val localDataSource: NoteDa
     override suspend fun deleteAllNotes() {
         localDataSource.deleteAllNotes()
     }
+
+    override fun searchNotes(query: String): Flow<List<Note>> {
+        return localDataSource.searchNotes(query)
+    }
 }

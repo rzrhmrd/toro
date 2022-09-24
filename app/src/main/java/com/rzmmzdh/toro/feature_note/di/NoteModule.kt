@@ -53,7 +53,8 @@ class NoteModule {
             getAllNotes = GetAllNotes(repository),
             insertNote = InsertNote(repository),
             deleteNote = DeleteNote(repository),
-            deleteAllNotes = DeleteAllNotes(repository)
+            deleteAllNotes = DeleteAllNotes(repository),
+            searchNotes = SearchNotes(repository)
         )
     }
 }
