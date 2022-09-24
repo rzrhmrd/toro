@@ -95,3 +95,62 @@ fun NoteList(
         }
     }
 }
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun NoteItem(
+    viewModel: HomeScreenViewModel,
+    note: Note,
+) {
+    Card(
+        modifier = Modifier
+            .size(192.dp)
+            .padding(8.dp),
+        onClick = { viewModel.onEvent(HomeScreenEvent.DeleteNote(note)) }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            NoteItemTitle(note)
+            NoteItemBody(note)
+        }
+
+    }
+}
+
+@Composable
+fun NoteItemTitle(note: Note) {
+    Text(
+        note.title,
+        style = TextStyle(
+            fontFamily = vazirFontFamily,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+            textDirection = TextDirection.ContentOrRtl,
+            textAlign = TextAlign.Center
+        ), maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+}
+
+@Composable
+fun NoteItemBody(note: Note) {
+    Text(
+        note.body,
+        style =
+        TextStyle(
+            fontFamily = vazirFontFamily,
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
+            textDirection = TextDirection.ContentOrRtl,
+            textAlign = TextAlign.Center
+        ),
+        maxLines = 3,
+        overflow = TextOverflow.Ellipsis
+
+    )
+}
