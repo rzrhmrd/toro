@@ -2,7 +2,7 @@
     <string name="app_name">TORO</string>
     <string name="save">📌</string>
     <string name="save_note_fab_icon">save note fab</string>
-    <string name="toro">تورو 🥏</string>
+    <string name="toro_title">تورو 🥏</string>
     <string name="home_screen_icon">home screen icon</string>
     <string name="edit_note_icon">edit note icon</string>
     <string name="new_note">فکر جدید 💭</string>
