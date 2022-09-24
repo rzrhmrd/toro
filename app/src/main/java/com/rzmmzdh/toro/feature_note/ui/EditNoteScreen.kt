@@ -2,6 +2,7 @@ package com.rzmmzdh.toro.feature_note.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -9,14 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
+import com.rzmmzdh.toro.feature_note.ui.core.Constant.editNoteTitles
 import com.rzmmzdh.toro.feature_note.ui.core.Screens
 import com.rzmmzdh.toro.feature_note.ui.core.component.MainNavigationBar
 import com.rzmmzdh.toro.feature_note.ui.viewmodel.EditNoteEvent
@@ -28,7 +28,7 @@ import kotlin.random.Random
 @Composable
 fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController: NavController) {
     Scaffold(
-        topBar = { MainTopBar(stringResource(R.string.new_note)) },
+        topBar = { EditNoteTopBar() },
         floatingActionButton = { SaveNoteFab(viewModel, navController) },
         bottomBar = {
             MainNavigationBar(
@@ -40,6 +40,26 @@ fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController
         EditNoteBody(paddingValues = paddingValues, viewModel)
 
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditNoteTopBar() {
+    TopAppBar(title = { TopBarTitle(title = editNoteTitles) })
+}
+
+@Composable
+fun TopBarTitle(title: ArrayList<String>) {
+    Text(
+        title[Random.nextInt(title.size)],
+        style = TextStyle(
+            fontFamily = vazirFontFamily,
+            fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
+            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+            textDirection = TextDirection.ContentOrRtl,
+            textAlign = TextAlign.Center
+        ), modifier = Modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -107,18 +127,18 @@ fun TitleTextInput(viewModel: EditNoteViewModel) {
         onValueChange = { viewModel.onEvent(EditNoteEvent.OnTitleChanged(it)) },
         textStyle = TextStyle(
             fontFamily = vazirFontFamily,
-            fontWeight = FontWeight.Medium,
-            fontSize = 18.sp,
+            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
             textDirection = TextDirection.ContentOrRtl,
             textAlign = TextAlign.Center
         ),
         placeholder = {
             Text(
-                stringResource(R.string.subject),
+                stringResource(id = R.string.subject),
                 style = TextStyle(
                     fontFamily = vazirFontFamily,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
+                    fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                     textDirection = TextDirection.ContentOrRtl,
                     textAlign = TextAlign.Center
                 ),
@@ -141,8 +161,8 @@ fun BodyTextInput(viewModel: EditNoteViewModel) {
         onValueChange = { viewModel.onEvent(EditNoteEvent.OnBodyChanged(it)) },
         textStyle = TextStyle(
             fontFamily = vazirFontFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = 18.sp,
+            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
             textDirection = TextDirection.ContentOrRtl,
             textAlign = TextAlign.Center
         ),
@@ -151,8 +171,8 @@ fun BodyTextInput(viewModel: EditNoteViewModel) {
                 stringResource(R.string.body),
                 style = TextStyle(
                     fontFamily = vazirFontFamily,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 18.sp,
+                    fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
+                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
                     textDirection = TextDirection.ContentOrRtl,
                     textAlign = TextAlign.Center
                 ),
@@ -177,13 +197,8 @@ fun SaveNoteFab(viewModel: EditNoteViewModel, navController: NavController) {
             }
         },
     ) {
-        Text(
-            stringResource(id = R.string.save),
-            style = TextStyle(
-                fontFamily = vazirFontFamily,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        )
+        Icon(Icons.Rounded.Check,
+            null,
+            modifier = Modifier.size(36.dp))
     }
 }

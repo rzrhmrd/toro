@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rzmmzdh.toro.feature_note.domain.usecase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,11 +17,14 @@ class HomeScreenViewModel @Inject constructor(
 ) : ViewModel() {
     var notes = mutableStateOf(NoteListUiState())
         private set
+    var searchQuery = mutableStateOf("")
+        private set
+    var searchJob: Job? = null
 
     init {
         viewModelScope.launch {
             noteUseCases.getAllNotes().collectLatest {
-                notes.value = NoteListUiState(notes = it)
+                notes.value = notes.value.copy(notes = it)
             }
         }
     }
@@ -28,7 +33,22 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is HomeScreenEvent.DeleteNote -> noteUseCases.deleteNote(event.note)
+                is HomeScreenEvent.OnSearch -> {
+                    searchNotes(event.value)
+                }
             }
+        }
+    }
+
+    private fun searchNotes(query: String) {
+        searchQuery.value = query
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500L)
+            noteUseCases.searchNotes(query).collectLatest {
+                notes.value = notes.value.copy(notes = it)
+            }
+
         }
     }
 }
