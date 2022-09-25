@@ -1,14 +1,10 @@
 <resources>
     <string name="app_name">TORO</string>
+    <string name="toro_title">تورو 🥏</string>
     <string name="save">📌</string>
     <string name="save_note_fab_icon">save note fab</string>
-    <string name="toro_title">تورو 🥏</string>
     <string name="home_screen_icon">home screen icon</string>
     <string name="edit_note_icon">edit note icon</string>
-    <string name="new_note">فکر جدید 💭</string>
     <string name="subject">موضوع</string>
     <string name="body">...</string>
-    <string name="settings_icon">settings icon</string>
-    <string name="hello_world">سلام دنیا!</string>
-    <string name="settings">تنظیمات</string>
 </resources>
