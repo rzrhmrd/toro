@@ -21,7 +21,7 @@ class HomeScreenViewModel @Inject constructor(
         private set
     var searchQuery = mutableStateOf("")
         private set
-    private var searchJob: Job? = null
+    private var searchNotesJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -44,8 +44,8 @@ class HomeScreenViewModel @Inject constructor(
 
     private fun searchNotes(query: String) {
         searchQuery.value = query
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
+        searchNotesJob?.cancel()
+        searchNotesJob = viewModelScope.launch {
             delay(500L)
             noteUseCases.searchNotes(query).collectLatest {
                 notes.value = notes.value.copy(notes = it)
