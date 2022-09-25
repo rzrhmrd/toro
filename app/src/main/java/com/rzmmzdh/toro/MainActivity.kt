@@ -10,12 +10,14 @@ import androidx.compose.ui.Modifier
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.rzmmzdh.toro.feature_note.ui.EditNoteScreen
 import com.rzmmzdh.toro.feature_note.ui.HomeScreen
-import com.rzmmzdh.toro.feature_note.ui.core.Screens
+import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.theme.TOROTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,12 +35,16 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = Screens.Home.route
+                        startDestination = Screen.Home.route
                     ) {
-                        composable(Screens.Home.route) {
+                        composable(Screen.Home.route) {
                             HomeScreen(navController = navController)
                         }
-                        composable(Screens.EditNote.route) {
+                        composable(route = Screen.EditNote.route + "?editNoteId={noteId}",
+                            arguments = listOf(navArgument("noteId") {
+                                type = NavType.IntType
+                                defaultValue = -1
+                            })) {
                             EditNoteScreen(navController = navController)
                         }
                     }
