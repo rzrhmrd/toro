@@ -1,4 +1,4 @@
-package com.rzmmzdh.toro.feature_note.ui
+package com.rzmmzdh.toro.feature_note.ui.home_screen
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -22,11 +22,9 @@ import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.feature_note.ui.core.component.MainNavigationBar
-import com.rzmmzdh.toro.feature_note.ui.home_screen.HomeScreenEvent
-import com.rzmmzdh.toro.feature_note.ui.home_screen.HomeScreenViewModel
-import com.rzmmzdh.toro.theme.style
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.space
+import com.rzmmzdh.toro.theme.style
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

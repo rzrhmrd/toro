@@ -21,7 +21,7 @@ class HomeScreenViewModel @Inject constructor(
         private set
     var searchQuery = mutableStateOf("")
         private set
-    var searchJob: Job? = null
+    private var searchJob: Job? = null
 
     init {
         viewModelScope.launch {

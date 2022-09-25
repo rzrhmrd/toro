@@ -1,4 +1,4 @@
-package com.rzmmzdh.toro.feature_note.ui
+package com.rzmmzdh.toro.feature_note.ui.edit_note_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,8 +18,6 @@ import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.ui.core.Constant.editNoteTitles
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.feature_note.ui.core.component.MainNavigationBar
-import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.EditNoteEvent
-import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.EditNoteViewModel
 import com.rzmmzdh.toro.theme.style
 import com.rzmmzdh.toro.theme.size
 import kotlin.random.Random

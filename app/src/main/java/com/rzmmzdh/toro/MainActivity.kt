@@ -15,8 +15,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.rzmmzdh.toro.feature_note.ui.EditNoteScreen
-import com.rzmmzdh.toro.feature_note.ui.HomeScreen
+import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.EditNoteScreen
+import com.rzmmzdh.toro.feature_note.ui.home_screen.HomeScreen
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.theme.TOROTheme
 import dagger.hilt.android.AndroidEntryPoint
