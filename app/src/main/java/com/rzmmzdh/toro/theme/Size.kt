@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 
 @Immutable
 data class Size(
-    val noteItem: Dp = 192.dp,
+    val noteCard: Dp = 192.dp,
     val noteTitleInputHeight: Dp = 84.dp,
     val noteTitleInputPadding: Dp = 8.dp,
     val noteBodyInputPadding: Dp = 8.dp,
