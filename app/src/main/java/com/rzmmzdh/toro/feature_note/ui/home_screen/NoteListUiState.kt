@@ -1,4 +1,4 @@
-package com.rzmmzdh.toro.feature_note.ui.viewmodel
+package com.rzmmzdh.toro.feature_note.ui.home_screen
 
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 

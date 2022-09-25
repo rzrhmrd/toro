@@ -1,30 +1,32 @@
 package com.rzmmzdh.toro.feature_note.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
-import com.rzmmzdh.toro.feature_note.ui.core.Screens
+import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.feature_note.ui.core.component.MainNavigationBar
-import com.rzmmzdh.toro.feature_note.ui.viewmodel.HomeScreenEvent
-import com.rzmmzdh.toro.feature_note.ui.viewmodel.HomeScreenViewModel
-import com.rzmmzdh.toro.theme.vazirFontFamily
+import com.rzmmzdh.toro.feature_note.ui.home_screen.HomeScreenEvent
+import com.rzmmzdh.toro.feature_note.ui.home_screen.HomeScreenViewModel
+import com.rzmmzdh.toro.theme.style
+import com.rzmmzdh.toro.theme.size
+import com.rzmmzdh.toro.theme.space
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,10 +39,10 @@ fun HomeScreen(
         modifier = modifier,
         topBar = { SearchableTopBar(viewModel.searchQuery.value, viewModel) },
         bottomBar = {
-            MainNavigationBar(navController, currentScreen = Screens.Home)
+            MainNavigationBar(navController, currentScreen = Screen.Home)
         }
     ) { paddingValues ->
-        NoteList(paddingValues, viewModel)
+        NoteList(paddingValues, viewModel, navController)
     }
 }
 
@@ -49,37 +51,38 @@ fun HomeScreen(
 fun SearchableTopBar(title: String, viewModel: HomeScreenViewModel) {
     CenterAlignedTopAppBar(title = {
         TextField(
-            value = title,
-            onValueChange = { viewModel.onEvent(HomeScreenEvent.OnSearch(it)) },
             modifier = Modifier
                 .fillMaxWidth(),
-            textStyle = TextStyle(fontFamily = vazirFontFamily,
-                fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
-                textDirection = TextDirection.ContentOrRtl,
-                color = MaterialTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center),
+            value = title,
+            onValueChange = { viewModel.onEvent(HomeScreenEvent.OnSearch(it)) },
+            textStyle = MaterialTheme.style.searchableTopBarText,
             placeholder = {
                 Text(
                     stringResource(id = R.string.toro_title),
-                    style = TextStyle(fontFamily = vazirFontFamily,
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        fontWeight = MaterialTheme.typography.titleLarge.fontWeight,
-                        textDirection = TextDirection.ContentOrRtl,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center), modifier = Modifier.fillMaxWidth()
+                    style = MaterialTheme.style.topBarTitle,
+                    modifier = Modifier.fillMaxWidth()
                 )
             },
             colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-            singleLine = true)
+            singleLine = true,
+            trailingIcon = {
+                AnimatedVisibility(
+                    visible = viewModel.searchQuery.value.isNotBlank(),
+                ) {
+                    Icon(Icons.Rounded.Close,
+                        null,
+                        modifier = Modifier.clickable { viewModel.onEvent(HomeScreenEvent.ClearSearchBox) })
+                }
+            }
+        )
     })
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NoteList(
     paddingValues: PaddingValues,
     viewModel: HomeScreenViewModel,
+    navController: NavController,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -88,30 +91,32 @@ fun NoteList(
             .padding(
                 top = paddingValues.calculateTopPadding(),
                 bottom = paddingValues.calculateBottomPadding(),
+                start = MaterialTheme.size.noteCardListPadding,
+                end = MaterialTheme.size.noteCardListPadding
             )
     ) {
         items(items = viewModel.notes.value.notes) { note ->
-            NoteItem(viewModel, note)
+            NoteItem(note, navController)
         }
     }
 }
 
-@Composable
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
 fun NoteItem(
-    viewModel: HomeScreenViewModel,
     note: Note,
+    navController: NavController,
 ) {
     Card(
         modifier = Modifier
-            .size(192.dp)
+            .size(MaterialTheme.size.noteItem)
             .padding(8.dp),
-        onClick = { viewModel.onEvent(HomeScreenEvent.DeleteNote(note)) }
+        onClick = { navController.navigate(Screen.EditNote.withNoteId(note.id)) }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(MaterialTheme.space.noteItemsPadding),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -126,13 +131,7 @@ fun NoteItem(
 fun NoteItemTitle(note: Note) {
     Text(
         note.title,
-        style = TextStyle(
-            fontFamily = vazirFontFamily,
-            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-            fontWeight = MaterialTheme.typography.bodyLarge.fontWeight,
-            textDirection = TextDirection.ContentOrRtl,
-            textAlign = TextAlign.Center
-        ), maxLines = 1,
+        style = MaterialTheme.style.noteCardTitle, maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
 }
@@ -142,13 +141,7 @@ fun NoteItemBody(note: Note) {
     Text(
         note.body,
         style =
-        TextStyle(
-            fontFamily = vazirFontFamily,
-            fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-            fontWeight = MaterialTheme.typography.bodyMedium.fontWeight,
-            textDirection = TextDirection.ContentOrRtl,
-            textAlign = TextAlign.Center
-        ),
+        MaterialTheme.style.noteCardBody,
         maxLines = 3,
         overflow = TextOverflow.Ellipsis
 

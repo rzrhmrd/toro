@@ -1,6 +1,7 @@
-package com.rzmmzdh.toro.feature_note.ui.viewmodel
+package com.rzmmzdh.toro.feature_note.ui.home_screen
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rzmmzdh.toro.feature_note.domain.usecase.NoteUseCases
@@ -14,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     var notes = mutableStateOf(NoteListUiState())
         private set
@@ -33,9 +35,9 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is HomeScreenEvent.DeleteNote -> noteUseCases.deleteNote(event.note)
-                is HomeScreenEvent.OnSearch -> {
-                    searchNotes(event.value)
-                }
+                is HomeScreenEvent.OnSearch -> searchNotes(event.value)
+                is HomeScreenEvent.ClearSearchBox -> searchNotes("")
+                is HomeScreenEvent.EditNote -> TODO()
             }
         }
     }
