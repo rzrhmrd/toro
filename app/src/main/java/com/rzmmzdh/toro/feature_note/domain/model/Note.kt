@@ -5,8 +5,8 @@ import kotlinx.datetime.Instant
 
 data class Note(
     val id: Int = 0,
-    val title: String,
-    val body: String,
+    var title: String,
+    var body: String,
     val lastModificationDate: Instant
 )
 
