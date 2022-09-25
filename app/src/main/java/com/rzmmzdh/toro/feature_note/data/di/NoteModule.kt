@@ -1,4 +1,4 @@
-package com.rzmmzdh.toro.feature_note.di
+package com.rzmmzdh.toro.feature_note.data.di
 
 import android.app.Application
 import androidx.room.Room
