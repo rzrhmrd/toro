@@ -94,23 +94,25 @@ fun NoteList(
             )
     ) {
         items(items = viewModel.notes.value.notes) { note ->
-            NoteItem(note, navController)
+            NoteItem(viewModel, note, navController)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteItem(
+    viewModel: HomeScreenViewModel,
     note: Note,
     navController: NavController,
 ) {
-    Card(
-        modifier = Modifier
-            .size(MaterialTheme.size.noteItem)
-            .padding(8.dp),
-        onClick = { navController.navigate(Screen.EditNote.withNoteId(note.id)) }
+    Card(modifier = Modifier
+        .clickable {
+            navController.navigate(Screen.EditNote.withNoteId(note.id))
+        }
+        .size(MaterialTheme.size.noteCard)
+        .padding(8.dp)
     ) {
+        DeleteNoteButton(viewModel, note)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -121,7 +123,19 @@ fun NoteItem(
             NoteItemTitle(note)
             NoteItemBody(note)
         }
+    }
+}
 
+@Composable
+fun DeleteNoteButton(viewModel: HomeScreenViewModel, note: Note) {
+    Box(contentAlignment = Alignment.TopStart, modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 4.dp, top = 4.dp)
+    ) {
+        IconButton(onClick = { viewModel.onEvent(HomeScreenEvent.DeleteNote(note)) },
+            modifier = Modifier.size(20.dp)) {
+            Icon(Icons.Rounded.Close, null, modifier = Modifier.size(16.dp))
+        }
     }
 }
 
