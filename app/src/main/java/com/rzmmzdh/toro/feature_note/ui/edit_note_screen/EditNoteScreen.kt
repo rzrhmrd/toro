@@ -151,7 +151,12 @@ fun SaveNoteFab(viewModel: EditNoteViewModel, navController: NavController) {
         onClick = {
             if (viewModel.currentNote.value.title.isNotBlank() || viewModel.currentNote.value.body.isNotBlank()) {
                 viewModel.onEvent(EditNoteEvent.SaveNote)
-                navController.navigate(Screen.Home.route)
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(navController.currentBackStackEntry?.destination?.route
+                        ?: return@navigate) {
+                        inclusive = true
+                    }
+                }
             } else {
                 viewModel.onEvent(EditNoteEvent.ShowAlert)
             }

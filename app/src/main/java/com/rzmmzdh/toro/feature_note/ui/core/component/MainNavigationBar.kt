@@ -25,12 +25,27 @@ fun MainNavigationBar(navController: NavController, currentScreen: Screen) {
             when (item) {
                 is Screen.Home -> NavigationBarItem(
                     selected = selectedDestination == item,
-                    onClick = { navController.navigate(Screen.Home.route) },
+                    onClick = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(navController.currentBackStackEntry?.destination?.route
+                                ?: return@navigate) {
+                                inclusive = true
+                            }
+                        }
+                    },
                     icon = { Icon(Icons.Rounded.Home, stringResource(R.string.home_screen_icon)) }
                 )
                 is Screen.EditNote -> NavigationBarItem(
                     selected = selectedDestination == item,
-                    onClick = { navController.navigate(Screen.EditNote.route) },
+                    onClick = {
+                        navController.navigate(Screen.EditNote.route) {
+                            popUpTo(navController.currentBackStackEntry?.destination?.route
+                                ?: return@navigate) {
+                                inclusive = true
+                            }
+
+                        }
+                    },
                     icon = { Icon(Icons.Rounded.Edit, stringResource(R.string.edit_note_icon)) }
                 )
             }
