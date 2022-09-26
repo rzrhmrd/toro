@@ -10,6 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,14 +35,35 @@ fun HomeScreen(
     viewModel: HomeScreenViewModel = hiltViewModel(),
     navController: NavController,
 ) {
+    val snackBarHostState = remember { SnackbarHostState() }
     Scaffold(
         modifier = modifier,
         topBar = { SearchableTopBar(viewModel.searchQuery.value, viewModel) },
         bottomBar = {
             MainNavigationBar(navController, currentScreen = Screen.Home)
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
         NoteList(paddingValues, viewModel, navController)
+        if (viewModel.showNoteDeletionNotification.value) {
+            DeletedNoteNotification(viewModel, snackBarHostState)
+        }
+
+    }
+}
+
+@Composable
+fun DeletedNoteNotification(viewModel: HomeScreenViewModel, snackbarHostState: SnackbarHostState) {
+    LaunchedEffect(key1 = viewModel.showNoteDeletionNotification) {
+        val noteDeletedMessage =
+            snackbarHostState.showSnackbar(message = "یادداشت حذف شد.",
+                actionLabel = "برگشت",
+                duration = SnackbarDuration.Long)
+        when (noteDeletedMessage) {
+            SnackbarResult.Dismissed -> viewModel.onEvent(HomeScreenEvent.NotificationDisplayed)
+            SnackbarResult.ActionPerformed -> viewModel.onEvent(HomeScreenEvent.UndoDeletedNote)
+        }
+
     }
 }
 
