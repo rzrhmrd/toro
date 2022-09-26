@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -49,16 +50,10 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = Screen.Home.route,
                             enterTransition = {
-                                when (initialState.destination.route) {
-                                    Screen.EditNote.route -> fadeIn()
-                                    else -> null
-                                }
+                                fadeIn(tween(500))
                             },
                             exitTransition = {
-                                when (targetState.destination.route) {
-                                    Screen.EditNote.route -> fadeOut()
-                                    else -> null
-                                }
+                                fadeOut(animationSpec = tween(500))
                             }) {
                             HomeScreen(navController = navController)
                         }
@@ -69,16 +64,10 @@ class MainActivity : ComponentActivity() {
                                 defaultValue = -1
                             }),
                             enterTransition = {
-                                when (initialState.destination.route) {
-                                    Screen.Home.route -> fadeIn()
-                                    else -> null
-                                }
+                                fadeIn(tween(500))
                             },
                             exitTransition = {
-                                when (targetState.destination.route) {
-                                    Screen.Home.route -> fadeOut()
-                                    else -> null
-                                }
+                                fadeOut(animationSpec = tween(500))
                             }
                         ) {
                             EditNoteScreen(navController = navController)
