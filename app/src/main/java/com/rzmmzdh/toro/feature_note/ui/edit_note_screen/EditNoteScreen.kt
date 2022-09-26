@@ -18,8 +18,8 @@ import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.ui.core.Constant.editNoteTitles
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.feature_note.ui.core.component.MainNavigationBar
-import com.rzmmzdh.toro.theme.style
 import com.rzmmzdh.toro.theme.size
+import com.rzmmzdh.toro.theme.style
 import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,10 +78,10 @@ fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
 
 @Composable
 fun EmptyInputError(viewModel: EditNoteViewModel) {
-    if (viewModel.openDialog.value) {
+    if (viewModel.showAlert.value) {
         AlertDialog(
             onDismissRequest = {
-                viewModel.openDialog.value = !viewModel.openDialog.value
+                viewModel.onEvent(EditNoteEvent.AlertShown)
             },
             icon = { Icon(Icons.Rounded.Info, null) },
             title = {
@@ -94,7 +94,7 @@ fun EmptyInputError(viewModel: EditNoteViewModel) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.openDialog.value = !viewModel.openDialog.value
+                        viewModel.onEvent(EditNoteEvent.AlertShown)
                     }
                 ) {
                     Text("باشه", style = MaterialTheme.style.errorBoxButton)
@@ -156,7 +156,7 @@ fun SaveNoteFab(viewModel: EditNoteViewModel, navController: NavController) {
                 viewModel.onEvent(EditNoteEvent.SaveNote)
                 navController.navigate(Screen.Home.route)
             } else {
-                viewModel.onEvent(EditNoteEvent.OpenDialog)
+                viewModel.onEvent(EditNoteEvent.ShowAlert)
             }
         },
     ) {

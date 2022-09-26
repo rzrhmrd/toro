@@ -17,7 +17,7 @@ class EditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    var openDialog = mutableStateOf(false)
+    var showAlert = mutableStateOf(false)
         private set
     var currentNote = mutableStateOf(Note(
         title = "",
@@ -70,8 +70,9 @@ class EditNoteViewModel @Inject constructor(
                     currentNote.value.copy(title = event.value)
                 is EditNoteEvent.OnBodyChanged -> currentNote.value =
                     currentNote.value.copy(body = event.value)
-                is EditNoteEvent.OpenDialog -> openDialog.value = !openDialog.value
+                is EditNoteEvent.ShowAlert -> showAlert.value = !showAlert.value
                 is EditNoteEvent.DeleteNote -> TODO()
+                is EditNoteEvent.AlertShown -> showAlert.value = !showAlert.value
             }
         }
 
