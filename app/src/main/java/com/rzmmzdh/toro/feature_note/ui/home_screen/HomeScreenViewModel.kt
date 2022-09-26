@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.domain.usecase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -21,7 +22,11 @@ class HomeScreenViewModel @Inject constructor(
         private set
     var searchQuery = mutableStateOf("")
         private set
+    var showNoteDeletionNotification = mutableStateOf(false)
+        private set
     private var searchNotesJob: Job? = null
+    var deletedNote: Note? = null
+        private set
 
     init {
         viewModelScope.launch {
@@ -34,10 +39,21 @@ class HomeScreenViewModel @Inject constructor(
     fun onEvent(event: HomeScreenEvent) {
         viewModelScope.launch {
             when (event) {
-                is HomeScreenEvent.DeleteNote -> noteUseCases.deleteNote(event.note)
+                is HomeScreenEvent.DeleteNote -> {
+                    deletedNote = event.note
+                    noteUseCases.deleteNote(event.note)
+                    showNoteDeletionNotification.value = !showNoteDeletionNotification.value
+                }
                 is HomeScreenEvent.OnSearch -> searchNotes(event.value)
                 is HomeScreenEvent.ClearSearchBox -> searchNotes("")
                 is HomeScreenEvent.EditNote -> TODO()
+                is HomeScreenEvent.UndoDeletedNote -> {
+                    deletedNote?.let { noteUseCases.insertNote(it) }
+                    deletedNote = null
+                    showNoteDeletionNotification.value = !showNoteDeletionNotification.value
+                }
+                HomeScreenEvent.NotificationDisplayed -> showNoteDeletionNotification.value =
+                    !showNoteDeletionNotification.value
             }
         }
     }
