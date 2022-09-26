@@ -1,7 +1,6 @@
 package com.rzmmzdh.toro.feature_note.ui.edit_note_screen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Info
@@ -123,8 +122,6 @@ fun NoteTitleInput(viewModel: EditNoteViewModel) {
             .fillMaxWidth()
             .height(MaterialTheme.size.noteTitleInputHeight)
             .padding(MaterialTheme.size.noteTitleInputPadding),
-        shape = RoundedCornerShape(topStart = MaterialTheme.size.noteTitleInputRadius,
-            topEnd = MaterialTheme.size.noteTitleInputRadius)
     )
 }
 
