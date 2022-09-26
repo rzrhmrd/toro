@@ -9,4 +9,5 @@ sealed class HomeScreenEvent {
     data class OnSearch(val value: String) : HomeScreenEvent()
     object UndoDeletedNote : HomeScreenEvent()
     object ClearSearchBox : HomeScreenEvent()
+    object NotificationDisplayed : HomeScreenEvent()
 }
