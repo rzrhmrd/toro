@@ -1,10 +1,10 @@
 object Version {
     const val coreKtx = "1.9.0"
     const val lifecycleRuntimeKtx = "2.5.1"
-    const val compose = "1.2.1"
+    const val compose = "1.3.0-beta03"
     const val activityCompose = "1.5.1"
     const val composeNavigation = "2.5.2"
-    const val material3 = "1.0.0-beta02"
+    const val material3 = "1.0.0-beta03"
     const val espressoCore = "3.4.0"
     const val junit = "4.13.2"
     const val junitExt = "1.1.3"
@@ -14,6 +14,7 @@ object Version {
     const val dataStore = "1.0.0"
     const val protobufJavaLite = "3.18.0"
     const val kotlinxDateTime = "0.4.0"
+    const val accompanist = "0.26.4-beta"
 }
 
 object Dep {
@@ -39,6 +40,10 @@ object Dep {
     const val material3 = "androidx.compose.material3:material3:${Version.material3}"
     const val navigationCompose =
         "androidx.navigation:navigation-compose:${Version.composeNavigation}"
+    const val accompanistSystemUiController =
+        "com.google.accompanist:accompanist-systemuicontroller:${Version.accompanist}"
+    const val accompanistNavigationAnimation =
+        "com.google.accompanist:accompanist-navigation-animation:${Version.accompanist}"
 
     //Room
     const val roomRuntime = "androidx.room:room-runtime:${Version.room}"

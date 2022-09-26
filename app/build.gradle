@@ -60,6 +60,8 @@ dependencies {
     debugImplementation(Dep.uiTestManifest)
     implementation(Dep.material3)
     implementation(Dep.navigationCompose)
+    implementation(Dep.accompanistSystemUiController)
+    implementation(Dep.accompanistNavigationAnimation)
 
     testImplementation(Dep.junit)
     androidTestImplementation(Dep.junitAndroid)
