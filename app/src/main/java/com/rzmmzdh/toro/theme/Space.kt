@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
-data class Space(val noteItemPadding: Dp = 8.dp, val noteItemsPadding: Dp = 16.dp)
+data class Space(val noteItemPadding: Dp = 12.dp)
 
 val LocalSpace = compositionLocalOf { Space() }
 

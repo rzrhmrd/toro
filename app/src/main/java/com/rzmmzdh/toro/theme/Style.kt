@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 data class Style(
     val noteCardTitle: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         fontWeight = FontWeight.Medium,
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
@@ -40,39 +40,39 @@ data class Style(
     val errorBoxTitle: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
         textDirection = TextDirection.ContentOrRtl,
-        fontSize = 18.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.Normal
     ),
     val errorBoxButton: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
         textDirection = TextDirection.ContentOrRtl,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         fontWeight = FontWeight.Normal
     ),
     val noteTitleInputValue: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         fontWeight = FontWeight.Medium,
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
     ),
     val noteTitleInputPlaceholder: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         fontWeight = FontWeight.Medium,
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
     ),
     val noteBodyInputValue: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         fontWeight = FontWeight.Normal,
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
     ),
     val noteBodyInputPlaceholder: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         fontWeight = FontWeight.Normal,
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center

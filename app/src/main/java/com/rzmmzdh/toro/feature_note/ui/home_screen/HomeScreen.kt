@@ -123,42 +123,44 @@ fun NoteList(
 }
 
 @Composable
-fun NoteItem(
-    viewModel: HomeScreenViewModel,
-    note: Note,
-    navController: NavController,
-) {
-    Card(modifier = Modifier
-        .clickable {
-            navController.navigate(Screen.EditNote.withNoteId(note.id))
-        }
-        .size(MaterialTheme.size.noteCard)
-        .padding(8.dp)
+fun NoteContent(viewModel: HomeScreenViewModel, note: Note) {
+    Box(contentAlignment = Alignment.TopStart, modifier = Modifier
+        .fillMaxSize()
+        .padding(4.dp)
     ) {
-        DeleteNoteButton(viewModel, note)
+        IconButton(onClick = { viewModel.onEvent(HomeScreenEvent.DeleteNote(note)) },
+            modifier = Modifier.size(20.dp)) {
+            Icon(Icons.Rounded.Close, null, modifier = Modifier.size(16.dp))
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(MaterialTheme.space.noteItemsPadding),
+                .padding(MaterialTheme.space.noteItemPadding),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             NoteItemTitle(note)
             NoteItemBody(note)
         }
+
     }
 }
 
 @Composable
-fun DeleteNoteButton(viewModel: HomeScreenViewModel, note: Note) {
-    Box(contentAlignment = Alignment.TopStart, modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 4.dp, top = 4.dp)
-    ) {
-        IconButton(onClick = { viewModel.onEvent(HomeScreenEvent.DeleteNote(note)) },
-            modifier = Modifier.size(20.dp)) {
-            Icon(Icons.Rounded.Close, null, modifier = Modifier.size(16.dp))
+fun NoteItem(
+    viewModel: HomeScreenViewModel,
+    note: Note,
+    navController: NavController,
+) {
+    Card(modifier = Modifier
+        .size(MaterialTheme.size.noteCard)
+        .padding(8.dp)
+        .clickable {
+            navController.navigate(Screen.EditNote.withNoteId(note.id))
         }
+
+    ) {
+        NoteContent(viewModel, note)
     }
 }
 
