@@ -4,8 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
-import com.rzmmzdh.toro.feature_note.ui.core.Constant.editNoteTitles
+import com.rzmmzdh.toro.feature_note.ui.core.Constant.errorMessages
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
-import com.rzmmzdh.toro.feature_note.ui.core.component.MainNavigationBar
+import com.rzmmzdh.toro.feature_note.ui.core.component.ToroNavigationBar
+import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.style
 import kotlin.random.Random
@@ -25,10 +29,22 @@ import kotlin.random.Random
 @Composable
 fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController: NavController) {
     Scaffold(
-        topBar = { EditNoteTopBar(viewModel, navController) },
-        floatingActionButton = { SaveNoteFab(viewModel, navController) },
+        topBar = {
+            EditNoteTopBar(title = viewModel.category.value, onCategoryClick = {
+                viewModel.onEvent(EditNoteEvent.CategorySelected(it))
+            })
+        },
+        floatingActionButton = {
+            SaveNoteFab(onClick = {
+                viewModel.onEvent(EditNoteEvent.SaveNote)
+                if (!viewModel.showAlert.value) {
+                    navController.navigateTo(
+                        route = Screen.Home.route)
+                }
+            })
+        },
         bottomBar = {
-            MainNavigationBar(
+            ToroNavigationBar(
                 navController = navController,
                 currentScreen = Screen.EditNote
             )
@@ -41,16 +57,46 @@ fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNoteTopBar(viewModel: EditNoteViewModel, navController: NavController) {
-    TopAppBar(title = { EditNoteTopBarTitle(titles = editNoteTitles) },
-        modifier = Modifier.fillMaxWidth())
-}
+fun EditNoteTopBar(title: String, onCategoryClick: (NoteCategory) -> Unit) {
+    val menuExpanded = remember { mutableStateOf(false) }
+    TopAppBar(
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                IconButton(
+                    onClick = { menuExpanded.value = !menuExpanded.value },
+                ) {
+                    Icon(Icons.Rounded.KeyboardArrowDown, null, modifier = Modifier.size(24.dp))
+                }
+                Text(
+                    text = title,
+                    style = MaterialTheme.style.topBarTitle,
+                )
+            }
+            DropdownMenu(
+                expanded = menuExpanded.value,
+                onDismissRequest = { menuExpanded.value = !menuExpanded.value },
+            ) {
+                val categories = NoteCategory.values()
+                categories.forEach {
+                    DropdownMenuItem(text = {
+                        Text(
+                            text = it.title,
+                            style = MaterialTheme.style.categoryList,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }, onClick = {
+                        onCategoryClick(it)
+                        menuExpanded.value = !menuExpanded.value
+                    })
+                }
 
-@Composable
-fun EditNoteTopBarTitle(titles: ArrayList<String>) {
-    Text(
-        titles[Random.nextInt(titles.size)],
-        style = MaterialTheme.style.topBarTitle, modifier = Modifier.fillMaxWidth()
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
     )
 }
 
@@ -68,8 +114,12 @@ fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NoteTitleInput(viewModel)
-        NoteBodyInput(viewModel)
+        NoteTitleInput(viewModel.currentNote.value.title) {
+            viewModel.onEvent(EditNoteEvent.OnTitleChanged(it))
+        }
+        NoteBodyInput(viewModel.currentNote.value.body) {
+            viewModel.onEvent(EditNoteEvent.OnBodyChanged(it))
+        }
     }
     EmptyInputError(viewModel)
 
@@ -85,7 +135,7 @@ fun EmptyInputError(viewModel: EditNoteViewModel) {
             icon = { Icon(Icons.Rounded.Info, null) },
             title = {
                 Text(
-                    text = viewModel.errorMessages[Random.nextInt(until = viewModel.errorMessages.size)],
+                    text = errorMessages[Random.nextInt(until = errorMessages.size)],
                     style = MaterialTheme.style.errorBoxTitle,
                     textAlign = TextAlign.Center,
                 )
@@ -105,10 +155,10 @@ fun EmptyInputError(viewModel: EditNoteViewModel) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun NoteTitleInput(viewModel: EditNoteViewModel) {
+fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
     TextField(
-        value = viewModel.currentNote.value.title,
-        onValueChange = { viewModel.onEvent(EditNoteEvent.OnTitleChanged(it)) },
+        value = value,
+        onValueChange = onValueChange,
         textStyle = MaterialTheme.style.noteTitleInputValue,
         placeholder = {
             Text(
@@ -127,10 +177,10 @@ fun NoteTitleInput(viewModel: EditNoteViewModel) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun NoteBodyInput(viewModel: EditNoteViewModel) {
+fun NoteBodyInput(value: String, onValueChange: (String) -> Unit) {
     TextField(
-        value = viewModel.currentNote.value.body,
-        onValueChange = { viewModel.onEvent(EditNoteEvent.OnBodyChanged(it)) },
+        value = value,
+        onValueChange = onValueChange,
         textStyle = MaterialTheme.style.noteBodyInputValue,
         placeholder = {
             Text(
@@ -146,24 +196,16 @@ fun NoteBodyInput(viewModel: EditNoteViewModel) {
 }
 
 @Composable
-fun SaveNoteFab(viewModel: EditNoteViewModel, navController: NavController) {
+fun SaveNoteFab(
+    onClick: () -> Unit,
+) {
     LargeFloatingActionButton(
-        onClick = {
-            if (viewModel.currentNote.value.title.isNotBlank() || viewModel.currentNote.value.body.isNotBlank()) {
-                viewModel.onEvent(EditNoteEvent.SaveNote)
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(navController.currentBackStackEntry?.destination?.route
-                        ?: return@navigate) {
-                        inclusive = true
-                    }
-                }
-            } else {
-                viewModel.onEvent(EditNoteEvent.ShowAlert)
-            }
-        },
+        onClick = onClick,
     ) {
-        Icon(Icons.Rounded.Check,
+        Icon(
+            Icons.Rounded.Check,
             null,
-            modifier = Modifier.size(36.dp))
+            modifier = Modifier.size(36.dp)
+        )
     }
 }
