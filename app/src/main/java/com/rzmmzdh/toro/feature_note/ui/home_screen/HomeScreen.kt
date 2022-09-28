@@ -23,7 +23,7 @@ import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
-import com.rzmmzdh.toro.feature_note.ui.core.component.MainNavigationBar
+import com.rzmmzdh.toro.feature_note.ui.core.component.ToroNavigationBar
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.space
 import com.rzmmzdh.toro.theme.style
@@ -38,30 +38,37 @@ fun HomeScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     Scaffold(
         modifier = modifier,
-        topBar = { SearchableTopBar(viewModel.searchQuery.value, viewModel) },
+        topBar = {
+            SearchableTopBar(title = viewModel.searchQuery.value,
+                onValueChange = { viewModel.onEvent(HomeScreenEvent.Search(viewModel.searchQuery.value)) },
+                closeSearchIconVisible = viewModel.searchQuery.value.isNotBlank(),
+                onCloseSearchIconClick = { viewModel.onEvent(HomeScreenEvent.ClearSearchBox) }
+            )
+        },
         bottomBar = {
-            MainNavigationBar(navController, currentScreen = Screen.Home)
+            ToroNavigationBar(navController = navController, currentScreen = Screen.Home)
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
-        NoteList(paddingValues, viewModel, navController)
+        NoteList(
+            paddingValues = paddingValues,
+            notes = viewModel.notes.value.notes,
+            onNoteDelete = { viewModel.onEvent(HomeScreenEvent.DeleteNote(it)) },
+            onNoteClick = {
+                navController.navigate(
+                    Screen.EditNote.withNoteId(
+                        it.id
+                    )
+                )
+            },
+        )
         if (viewModel.showNoteDeletionNotification.value) {
-            DeletedNoteNotification(viewModel, snackBarHostState)
-        }
-
-    }
-}
-
-@Composable
-fun DeletedNoteNotification(viewModel: HomeScreenViewModel, snackbarHostState: SnackbarHostState) {
-    LaunchedEffect(key1 = viewModel.showNoteDeletionNotification) {
-        val noteDeletedMessage =
-            snackbarHostState.showSnackbar(message = "یادداشت حذف شد.",
-                actionLabel = "برگشت",
-                duration = SnackbarDuration.Long)
-        when (noteDeletedMessage) {
-            SnackbarResult.Dismissed -> viewModel.onEvent(HomeScreenEvent.NotificationDisplayed)
-            SnackbarResult.ActionPerformed -> viewModel.onEvent(HomeScreenEvent.UndoDeletedNote)
+            NoteDeleteNotification(
+                key = { viewModel.showNoteDeletionNotification },
+                onDismiss = { viewModel.onEvent(HomeScreenEvent.NotificationDisplayed) },
+                onAction = { viewModel.onEvent(HomeScreenEvent.UndoDeletedNote) },
+                snackbarHostState = snackBarHostState
+            )
         }
 
     }
@@ -69,13 +76,18 @@ fun DeletedNoteNotification(viewModel: HomeScreenViewModel, snackbarHostState: S
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchableTopBar(title: String, viewModel: HomeScreenViewModel) {
+fun SearchableTopBar(
+    title: String,
+    onValueChange: (String) -> Unit,
+    closeSearchIconVisible: Boolean,
+    onCloseSearchIconClick: () -> Unit,
+) {
     CenterAlignedTopAppBar(title = {
         TextField(
             modifier = Modifier
                 .fillMaxWidth(),
             value = title,
-            onValueChange = { viewModel.onEvent(HomeScreenEvent.OnSearch(it)) },
+            onValueChange = { onValueChange(it) },
             textStyle = MaterialTheme.style.searchableTopBarText,
             placeholder = {
                 Text(
@@ -88,11 +100,13 @@ fun SearchableTopBar(title: String, viewModel: HomeScreenViewModel) {
             singleLine = true,
             trailingIcon = {
                 AnimatedVisibility(
-                    visible = viewModel.searchQuery.value.isNotBlank(),
+                    visible = closeSearchIconVisible,
                 ) {
-                    Icon(Icons.Rounded.Close,
+                    Icon(
+                        Icons.Rounded.Close,
                         null,
-                        modifier = Modifier.clickable { viewModel.onEvent(HomeScreenEvent.ClearSearchBox) })
+                        modifier = Modifier.clickable(onClick = onCloseSearchIconClick)
+                    )
                 }
             }
         )
@@ -102,8 +116,9 @@ fun SearchableTopBar(title: String, viewModel: HomeScreenViewModel) {
 @Composable
 fun NoteList(
     paddingValues: PaddingValues,
-    viewModel: HomeScreenViewModel,
-    navController: NavController,
+    notes: List<Note>,
+    onNoteClick: (Note) -> Unit,
+    onNoteDelete: (Note) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -116,51 +131,58 @@ fun NoteList(
                 end = MaterialTheme.size.noteCardListPadding
             )
     ) {
-        items(items = viewModel.notes.value.notes) { note ->
-            NoteItem(viewModel, note, navController)
+        items(items = notes) {
+            NoteItem(note = it,
+                onDelete = { onNoteDelete(it) },
+                onClick = { onNoteClick(it) }
+            )
         }
-    }
-}
-
-@Composable
-fun NoteContent(viewModel: HomeScreenViewModel, note: Note) {
-    Box(contentAlignment = Alignment.TopStart, modifier = Modifier
-        .fillMaxSize()
-        .padding(4.dp)
-    ) {
-        IconButton(onClick = { viewModel.onEvent(HomeScreenEvent.DeleteNote(note)) },
-            modifier = Modifier.size(20.dp)) {
-            Icon(Icons.Rounded.Close, null, modifier = Modifier.size(16.dp))
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(MaterialTheme.space.noteItemPadding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            NoteItemTitle(note)
-            NoteItemBody(note)
-        }
-
     }
 }
 
 @Composable
 fun NoteItem(
-    viewModel: HomeScreenViewModel,
     note: Note,
-    navController: NavController,
+    onDelete: () -> Unit,
+    onClick: () -> Unit,
 ) {
-    Card(modifier = Modifier
-        .size(MaterialTheme.size.noteCard)
-        .padding(8.dp)
-        .clickable {
-            navController.navigate(Screen.EditNote.withNoteId(note.id))
-        }
+    Card(
+        modifier = Modifier
+            .size(MaterialTheme.size.noteCard)
+            .padding(8.dp)
+            .clickable(onClick = onClick)
 
     ) {
-        NoteContent(viewModel, note)
+        Box(
+            contentAlignment = Alignment.TopStart, modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+        ) {
+            DeleteNoteButton(onDelete)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(MaterialTheme.space.noteItemPadding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                NoteItemTitle(note)
+                NoteItemBody(note)
+            }
+
+        }
+    }
+}
+
+@Composable
+private fun DeleteNoteButton(
+    onDeleteIconClick: () -> Unit,
+) {
+    IconButton(
+        onClick = onDeleteIconClick,
+        modifier = Modifier.size(20.dp)
+    ) {
+        Icon(Icons.Rounded.Close, null, modifier = Modifier.size(16.dp))
     }
 }
 
@@ -184,3 +206,26 @@ fun NoteItemBody(note: Note) {
 
     )
 }
+
+@Composable
+fun NoteDeleteNotification(
+    key: Any,
+    onDismiss: () -> Unit,
+    onAction: () -> Unit,
+    snackbarHostState: SnackbarHostState
+) {
+    LaunchedEffect(key1 = key) {
+        val noteDeletedMessage =
+            snackbarHostState.showSnackbar(
+                message = "یادداشت حذف شد.",
+                actionLabel = "برگشت",
+                duration = SnackbarDuration.Long
+            )
+        when (noteDeletedMessage) {
+            SnackbarResult.Dismissed -> onDismiss
+            SnackbarResult.ActionPerformed -> onAction
+        }
+
+    }
+}
+
