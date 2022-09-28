@@ -77,7 +77,14 @@ data class Style(
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
     ),
-)
+    val categoryList: TextStyle = TextStyle(fontFamily = vazirFontFamily,
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Medium,
+        textDirection = TextDirection.ContentOrRtl,
+        textAlign = TextAlign.Center),
+
+    )
+
 
 val LocalStyle = staticCompositionLocalOf { Style() }
 val MaterialTheme.style: Style
