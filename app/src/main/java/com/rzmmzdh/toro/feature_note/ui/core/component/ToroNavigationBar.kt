@@ -15,9 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
+import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
 
 @Composable
-fun MainNavigationBar(navController: NavController, currentScreen: Screen) {
+fun ToroNavigationBar(navController: NavController, currentScreen: Screen) {
     val selectedDestination by remember { mutableStateOf(currentScreen) }
     val items = listOf(Screen.EditNote, Screen.Home)
     NavigationBar(modifier = Modifier) {
@@ -26,25 +27,14 @@ fun MainNavigationBar(navController: NavController, currentScreen: Screen) {
                 is Screen.Home -> NavigationBarItem(
                     selected = selectedDestination == item,
                     onClick = {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(navController.currentBackStackEntry?.destination?.route
-                                ?: return@navigate) {
-                                inclusive = true
-                            }
-                        }
+                        navController.navigateTo(Screen.Home.route)
                     },
                     icon = { Icon(Icons.Rounded.Home, stringResource(R.string.home_screen_icon)) }
                 )
                 is Screen.EditNote -> NavigationBarItem(
                     selected = selectedDestination == item,
                     onClick = {
-                        navController.navigate(Screen.EditNote.route) {
-                            popUpTo(navController.currentBackStackEntry?.destination?.route
-                                ?: return@navigate) {
-                                inclusive = true
-                            }
-
-                        }
+                        navController.navigateTo(Screen.EditNote.route)
                     },
                     icon = { Icon(Icons.Rounded.Edit, stringResource(R.string.edit_note_icon)) }
                 )

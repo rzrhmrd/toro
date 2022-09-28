@@ -24,6 +24,7 @@ import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.feature_note.ui.core.component.ToroNavigationBar
+import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.space
 import com.rzmmzdh.toro.theme.style
@@ -39,9 +40,10 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            SearchableTopBar(title = viewModel.searchQuery.value,
-                onValueChange = { viewModel.onEvent(HomeScreenEvent.Search(viewModel.searchQuery.value)) },
-                closeSearchIconVisible = viewModel.searchQuery.value.isNotBlank(),
+            SearchableTopBar(
+                title = viewModel.searchQuery.value,
+                onValueChange = { viewModel.onEvent(HomeScreenEvent.Search(it)) },
+                clearSearchIconVisible = viewModel.searchQuery.value.isNotBlank(),
                 onCloseSearchIconClick = { viewModel.onEvent(HomeScreenEvent.ClearSearchBox) }
             )
         },
@@ -55,11 +57,7 @@ fun HomeScreen(
             notes = viewModel.notes.value.notes,
             onNoteDelete = { viewModel.onEvent(HomeScreenEvent.DeleteNote(it)) },
             onNoteClick = {
-                navController.navigate(
-                    Screen.EditNote.withNoteId(
-                        it.id
-                    )
-                )
+                navController.navigateTo(Screen.EditNote.withNoteId(it.id))
             },
         )
         if (viewModel.showNoteDeletionNotification.value) {
@@ -79,7 +77,7 @@ fun HomeScreen(
 fun SearchableTopBar(
     title: String,
     onValueChange: (String) -> Unit,
-    closeSearchIconVisible: Boolean,
+    clearSearchIconVisible: Boolean = false,
     onCloseSearchIconClick: () -> Unit,
 ) {
     CenterAlignedTopAppBar(title = {
@@ -100,7 +98,7 @@ fun SearchableTopBar(
             singleLine = true,
             trailingIcon = {
                 AnimatedVisibility(
-                    visible = closeSearchIconVisible,
+                    visible = clearSearchIconVisible,
                 ) {
                     Icon(
                         Icons.Rounded.Close,
@@ -175,7 +173,7 @@ fun NoteItem(
 }
 
 @Composable
-private fun DeleteNoteButton(
+fun DeleteNoteButton(
     onDeleteIconClick: () -> Unit,
 ) {
     IconButton(
@@ -212,7 +210,7 @@ fun NoteDeleteNotification(
     key: Any,
     onDismiss: () -> Unit,
     onAction: () -> Unit,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
 ) {
     LaunchedEffect(key1 = key) {
         val noteDeletedMessage =
@@ -222,8 +220,8 @@ fun NoteDeleteNotification(
                 duration = SnackbarDuration.Long
             )
         when (noteDeletedMessage) {
-            SnackbarResult.Dismissed -> onDismiss
-            SnackbarResult.ActionPerformed -> onAction
+            SnackbarResult.Dismissed -> onDismiss()
+            SnackbarResult.ActionPerformed -> onAction()
         }
 
     }
