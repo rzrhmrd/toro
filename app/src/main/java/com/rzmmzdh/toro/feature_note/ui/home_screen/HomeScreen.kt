@@ -74,7 +74,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchableTopBar(
+private fun SearchableTopBar(
     title: String,
     onValueChange: (String) -> Unit,
     clearSearchIconVisible: Boolean = false,
@@ -112,7 +112,7 @@ fun SearchableTopBar(
 }
 
 @Composable
-fun NoteList(
+private fun NoteList(
     paddingValues: PaddingValues,
     notes: List<Note>,
     onNoteClick: (Note) -> Unit,
@@ -139,7 +139,7 @@ fun NoteList(
 }
 
 @Composable
-fun NoteItem(
+private fun NoteItem(
     note: Note,
     onDelete: () -> Unit,
     onClick: () -> Unit,
@@ -173,7 +173,7 @@ fun NoteItem(
 }
 
 @Composable
-fun DeleteNoteButton(
+private fun DeleteNoteButton(
     onDeleteIconClick: () -> Unit,
 ) {
     IconButton(
@@ -185,7 +185,7 @@ fun DeleteNoteButton(
 }
 
 @Composable
-fun NoteItemTitle(note: Note) {
+private fun NoteItemTitle(note: Note) {
     Text(
         note.title,
         style = MaterialTheme.style.noteCardTitle, maxLines = 1,
@@ -194,7 +194,7 @@ fun NoteItemTitle(note: Note) {
 }
 
 @Composable
-fun NoteItemBody(note: Note) {
+private fun NoteItemBody(note: Note) {
     Text(
         note.body,
         style =
@@ -206,7 +206,7 @@ fun NoteItemBody(note: Note) {
 }
 
 @Composable
-fun NoteDeleteNotification(
+private fun NoteDeleteNotification(
     key: Any,
     onDismiss: () -> Unit,
     onAction: () -> Unit,

@@ -57,7 +57,7 @@ fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNoteTopBar(title: String, onCategoryClick: (NoteCategory) -> Unit) {
+private fun EditNoteTopBar(title: String, onCategoryClick: (NoteCategory) -> Unit) {
     val menuExpanded = remember { mutableStateOf(false) }
     TopAppBar(
         title = {
@@ -101,7 +101,7 @@ fun EditNoteTopBar(title: String, onCategoryClick: (NoteCategory) -> Unit) {
 }
 
 @Composable
-fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
+private fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -126,7 +126,7 @@ fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
 }
 
 @Composable
-fun EmptyInputError(viewModel: EditNoteViewModel) {
+private fun EmptyInputError(viewModel: EditNoteViewModel) {
     if (viewModel.showAlert.value) {
         AlertDialog(
             onDismissRequest = {
@@ -155,7 +155,7 @@ fun EmptyInputError(viewModel: EditNoteViewModel) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
+private fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -177,7 +177,7 @@ fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun NoteBodyInput(value: String, onValueChange: (String) -> Unit) {
+private fun NoteBodyInput(value: String, onValueChange: (String) -> Unit) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -196,7 +196,7 @@ fun NoteBodyInput(value: String, onValueChange: (String) -> Unit) {
 }
 
 @Composable
-fun SaveNoteFab(
+private fun SaveNoteFab(
     onClick: () -> Unit,
 ) {
     LargeFloatingActionButton(
