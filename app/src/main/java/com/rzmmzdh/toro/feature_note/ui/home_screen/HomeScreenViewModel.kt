@@ -44,7 +44,7 @@ class HomeScreenViewModel @Inject constructor(
                     noteUseCases.deleteNote(event.note)
                     showNoteDeletionNotification.value = !showNoteDeletionNotification.value
                 }
-                is HomeScreenEvent.OnSearch -> searchNotes(event.value)
+                is HomeScreenEvent.Search -> searchNotes(event.value)
                 is HomeScreenEvent.ClearSearchBox -> searchNotes("")
                 is HomeScreenEvent.EditNote -> TODO()
                 is HomeScreenEvent.UndoDeletedNote -> {
