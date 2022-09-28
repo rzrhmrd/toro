@@ -44,10 +44,16 @@ class HomeScreenViewModel @Inject constructor(
                     noteUseCases.deleteNote(event.note)
                     showNoteDeletionNotification.value = !showNoteDeletionNotification.value
                 }
-                is HomeScreenEvent.Search -> searchNotes(event.value)
-                is HomeScreenEvent.ClearSearchBox -> searchNotes("")
-                is HomeScreenEvent.EditNote -> TODO()
-                is HomeScreenEvent.UndoDeletedNote -> {
+                is HomeScreenEvent.Search -> {
+                    searchQuery.value = event.value
+                    searchNotes(event.value)
+                }
+                is HomeScreenEvent.ClearSearchBox -> {
+                    searchNotes("")
+
+                }
+                is HomeScreenEvent.UndoDeletedNote,
+                -> {
                     deletedNote?.let { noteUseCases.insertNote(it) }
                     deletedNote = null
                     showNoteDeletionNotification.value = !showNoteDeletionNotification.value
