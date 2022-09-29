@@ -1,11 +1,5 @@
 object Dep {
 
-    //Ktx
-    const val coreKtx = "androidx.core:core-ktx:${Version.coreKtx}"
-    const val lifecycleRuntimeKtx =
-        "androidx.lifecycle:lifecycle-runtime-ktx:${Version.lifecycleRuntimeKtx}"
-    const val roomKtx = "androidx.room:room-ktx:${Version.room}"
-
     //Test
     const val junit = "junit:junit:${Version.junit}"
     const val junitAndroid = "androidx.test.ext:junit:${Version.junitExt}"

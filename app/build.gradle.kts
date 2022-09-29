@@ -49,9 +49,9 @@ android {
     }
 }
 dependencies {
-    implementation(Dep.coreKtx)
-    implementation(Dep.lifecycleRuntimeKtx)
-    implementation(Dep.roomKtx)
+    implementation(libs.coreKtx)
+    implementation(libs.lifecycleRuntimeKtx)
+    implementation(libs.roomKtx)
 
     implementation(Dep.composeUi)
     implementation(Dep.uiToolingPreview)
