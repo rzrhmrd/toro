@@ -1,8 +1,8 @@
 plugins {
-    id(Plugin.androidApplication)
-    id(Plugin.kotlinAndroid)
-    id(Plugin.kotlinKapt)
-    id(Plugin.daggerHiltAndroid)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("dagger.hilt.android.plugin")
+    kotlin("kapt")
 }
 
 android {
@@ -49,31 +49,26 @@ android {
     }
 }
 dependencies {
-    implementation(libs.coreKtx)
-    implementation(libs.lifecycleRuntimeKtx)
-    implementation(libs.roomKtx)
-
-    implementation(Dep.composeUi)
-    implementation(Dep.uiToolingPreview)
-    implementation(Dep.activityCompose)
-    debugImplementation(Dep.uiTooling)
-    debugImplementation(Dep.uiTestManifest)
-    implementation(Dep.material3)
-    implementation(Dep.navigationCompose)
-    implementation(Dep.accompanistSystemUiController)
-    implementation(Dep.accompanistNavigationAnimation)
-
-    testImplementation(Dep.junit)
-    androidTestImplementation(Dep.junitAndroid)
-    androidTestImplementation(Dep.espressoCore)
-    androidTestImplementation(Dep.UiTestJunit4)
-
-    implementation(Dep.roomRuntime)
-    kapt(Dep.roomCompiler)
-
-    implementation(Dep.hiltAndroid)
-    kapt(Dep.hiltCompiler)
-    implementation(Dep.hiltNavigationCompose)
-
-    implementation(Dep.kotlinxDateTime)
+    implementation(libs.ktx.core)
+    implementation(libs.ktx.lifecycleRuntime)
+    implementation(libs.ktx.room)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.uiTooling)
+    implementation(libs.compose.uiToolingPreview)
+    implementation(libs.compose.uiTestManifest)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.activity)
+    implementation(libs.accompanist.systemUiController)
+    implementation(libs.accompanist.navigationAnimation)
+    testImplementation(libs.test.junit)
+    androidTestImplementation(libs.test.junit.ext)
+    androidTestImplementation(libs.test.espressoCore)
+    androidTestImplementation(libs.test.uiTestJunit4)
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigationCompose)
+    implementation(libs.kotlinx.dateTime)
 }
