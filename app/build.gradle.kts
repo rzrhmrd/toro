@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
-    id("dagger.hilt.android.plugin")
+    id(Plugin.androidApplication)
+    id(Plugin.kotlinAndroid)
+    id(Plugin.kotlinKapt)
+    id(Plugin.daggerHiltAndroid)
 }
 
 android {
@@ -50,7 +50,7 @@ android {
 }
 dependencies {
     implementation(Dep.coreKtx)
-    implementation(Dep.ifecycleRuntimeKtx)
+    implementation(Dep.lifecycleRuntimeKtx)
     implementation(Dep.roomKtx)
 
     implementation(Dep.composeUi)

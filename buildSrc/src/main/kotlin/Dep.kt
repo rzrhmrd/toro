@@ -1,36 +1,8 @@
-object Version {
-    const val coreKtx = "1.9.0"
-    const val lifecycleRuntimeKtx = "2.5.1"
-    const val compose = "1.3.0-beta03"
-    const val activityCompose = "1.5.1"
-    const val composeNavigation = "2.5.2"
-    const val material3 = "1.0.0-beta03"
-    const val espressoCore = "3.4.0"
-    const val junit = "4.13.2"
-    const val junitExt = "1.1.3"
-    const val room = "2.4.3"
-    const val hilt = "2.42"
-    const val hiltNavigationCompose = "1.0.0"
-    const val dataStore = "1.0.0"
-    const val protobufJavaLite = "3.18.0"
-    const val kotlinxDateTime = "0.4.0"
-    const val accompanist = "0.26.4-beta"
-    const val androidApplicationPlugin = "7.3.0-rc01"
-    const val kotlinAndroidPlugin = "1.6.10"
-}
-
 object Dep {
-
-    //Plugin
-    const val hiltAndroidGradlePlugin =
-        "com.google.dagger:hilt-android-gradle-plugin:${Version.hilt}"
-    const val androidApplicationPlugin = "com.android.application"
-    const val androidLibraryPlugin = "com.android.library"
-    const val kotlinAndroidPlugin = "org.jetbrains.kotlin.android"
 
     //Ktx
     const val coreKtx = "androidx.core:core-ktx:${Version.coreKtx}"
-    const val ifecycleRuntimeKtx =
+    const val lifecycleRuntimeKtx =
         "androidx.lifecycle:lifecycle-runtime-ktx:${Version.lifecycleRuntimeKtx}"
     const val roomKtx = "androidx.room:room-ktx:${Version.room}"
 
