@@ -72,7 +72,6 @@ class EditNoteViewModel @Inject constructor(
                 is EditNoteEvent.OnBodyChanged -> currentNote.value =
                     currentNote.value.copy(body = event.value)
                 is EditNoteEvent.ShowAlert -> showAlert.value = !showAlert.value
-                is EditNoteEvent.DeleteNote -> TODO()
                 is EditNoteEvent.AlertShown -> showAlert.value = !showAlert.value
                 is EditNoteEvent.CategorySelected -> category.value = event.category.title
             }
