@@ -16,7 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     var notes = mutableStateOf(NoteListUiState())
         private set
@@ -42,6 +41,8 @@ class HomeScreenViewModel @Inject constructor(
                 is HomeScreenEvent.DeleteNote -> {
                     deletedNote = event.note
                     noteUseCases.deleteNote(event.note)
+                    if (showNoteDeletionNotification.value) showNoteDeletionNotification.value =
+                        !showNoteDeletionNotification.value
                     showNoteDeletionNotification.value = !showNoteDeletionNotification.value
                 }
                 is HomeScreenEvent.Search -> {
@@ -54,9 +55,11 @@ class HomeScreenViewModel @Inject constructor(
                 }
                 is HomeScreenEvent.UndoDeletedNote,
                 -> {
+                    if (showNoteDeletionNotification.value) {
+                        showNoteDeletionNotification.value = !showNoteDeletionNotification.value
+                    }
                     deletedNote?.let { noteUseCases.insertNote(it) }
                     deletedNote = null
-                    showNoteDeletionNotification.value = !showNoteDeletionNotification.value
                 }
                 HomeScreenEvent.NotificationDisplayed -> showNoteDeletionNotification.value =
                     !showNoteDeletionNotification.value
