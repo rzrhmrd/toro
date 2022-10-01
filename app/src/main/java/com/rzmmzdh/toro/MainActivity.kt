@@ -79,13 +79,15 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun HideSystemBar(
+    private fun HideSystemBar(
         systemUiController: SystemUiController,
         useDarkIcons: Boolean,
     ) {
         SideEffect {
-            systemUiController.setSystemBarsColor(color = Color.Transparent,
-                darkIcons = useDarkIcons)
+            systemUiController.setSystemBarsColor(
+                color = Color.Transparent,
+                darkIcons = useDarkIcons
+            )
         }
     }
 }
