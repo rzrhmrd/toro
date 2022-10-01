@@ -30,7 +30,7 @@ import kotlin.random.Random
 fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController: NavController) {
     Scaffold(
         topBar = {
-            EditNoteTopBar(title = viewModel.category.value, onCategoryClick = {
+            EditNoteTopBar(title = viewModel.currentNote.value.category.title, onCategoryClick = {
                 viewModel.onEvent(EditNoteEvent.CategorySelected(it))
             })
         },
@@ -39,7 +39,8 @@ fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController
                 viewModel.onEvent(EditNoteEvent.SaveNote)
                 if (!viewModel.showAlert.value) {
                     navController.navigateTo(
-                        route = Screen.Home.route)
+                        route = Screen.Home.route
+                    )
                 }
             })
         },

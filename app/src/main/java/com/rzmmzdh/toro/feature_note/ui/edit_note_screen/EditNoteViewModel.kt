@@ -19,13 +19,15 @@ class EditNoteViewModel @Inject constructor(
 ) : ViewModel() {
     var showAlert = mutableStateOf(false)
         private set
-    var currentNote = mutableStateOf(Note(
-        title = "",
-        body = "",
-        lastModificationDate = Clock.System.now()))
+    var currentNote = mutableStateOf(
+        Note(
+            title = "",
+            body = "",
+            category = NoteCategory.FREE,
+            lastModificationDate = Clock.System.now()
+        )
+    )
         private set
-
-    val category = mutableStateOf(NoteCategory.FREE.title)
 
     init {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
@@ -34,10 +36,13 @@ class EditNoteViewModel @Inject constructor(
                 if (currentNote.value.id != -1) {
                     noteUseCases.getNote(noteId).collectLatest { note ->
                         currentNote.value =
-                            currentNote.value.copy(id = note.id,
+                            currentNote.value.copy(
+                                id = note.id,
                                 title = note.title,
                                 body = note.body,
-                                lastModificationDate = note.lastModificationDate)
+                                category = note.category,
+                                lastModificationDate = note.lastModificationDate
+                            )
                     }
                 }
             }
@@ -54,13 +59,17 @@ class EditNoteViewModel @Inject constructor(
                                 id = currentNote.value.id,
                                 title = currentNote.value.title,
                                 body = currentNote.value.body,
+                                category = currentNote.value.category,
                                 lastModificationDate = currentNote.value.lastModificationDate
                             )
                             noteUseCases.insertNote(existingNote)
                         } else {
-                            val newNote = Note(title = currentNote.value.title,
+                            val newNote = Note(
+                                title = currentNote.value.title,
                                 body = currentNote.value.body,
-                                lastModificationDate = currentNote.value.lastModificationDate)
+                                category = currentNote.value.category,
+                                lastModificationDate = currentNote.value.lastModificationDate
+                            )
                             noteUseCases.insertNote(newNote)
                         }
                     } else {
@@ -71,9 +80,10 @@ class EditNoteViewModel @Inject constructor(
                     currentNote.value.copy(title = event.value)
                 is EditNoteEvent.OnBodyChanged -> currentNote.value =
                     currentNote.value.copy(body = event.value)
-                is EditNoteEvent.ShowAlert -> showAlert.value = !showAlert.value
-                is EditNoteEvent.AlertShown -> showAlert.value = !showAlert.value
-                is EditNoteEvent.CategorySelected -> category.value = event.category.title
+                is EditNoteEvent.ShowAlert -> showAlert.value = true
+                is EditNoteEvent.AlertShown -> showAlert.value = false
+                is EditNoteEvent.CategorySelected -> currentNote.value =
+                    currentNote.value.copy(category = event.category)
             }
         }
 
