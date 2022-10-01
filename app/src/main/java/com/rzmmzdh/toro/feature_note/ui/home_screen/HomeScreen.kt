@@ -33,7 +33,7 @@ import com.rzmmzdh.toro.theme.style
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeScreenViewModel = hiltViewModel(),
+    state: HomeScreenViewModel = hiltViewModel(),
     navController: NavController,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -41,10 +41,10 @@ fun HomeScreen(
         modifier = modifier,
         topBar = {
             SearchableTopBar(
-                title = viewModel.searchQuery.value,
-                onValueChange = { viewModel.onEvent(HomeScreenEvent.Search(it)) },
-                clearSearchIconVisible = viewModel.searchQuery.value.isNotBlank(),
-                onCloseSearchIconClick = { viewModel.onEvent(HomeScreenEvent.ClearSearchBox) }
+                title = state.searchQuery.value,
+                onValueChange = { state.onEvent(HomeScreenEvent.Search(it)) },
+                clearSearchIconVisible = state.searchQuery.value.isNotBlank(),
+                onCloseSearchIconClick = { state.onEvent(HomeScreenEvent.ClearSearchBox) }
             )
         },
         bottomBar = {
@@ -54,17 +54,17 @@ fun HomeScreen(
     ) { paddingValues ->
         NoteList(
             paddingValues = paddingValues,
-            notes = viewModel.notes.value.notes,
-            onNoteDelete = { viewModel.onEvent(HomeScreenEvent.DeleteNote(it)) },
+            notes = state.notes.value.notes,
+            onNoteDelete = { state.onEvent(HomeScreenEvent.DeleteNote(it)) },
             onNoteClick = {
                 navController.navigateTo(Screen.EditNote.withNoteId(it.id))
             },
         )
-        if (viewModel.showNoteDeletionNotification.value) {
+        if (state.showNoteDeletionNotification.value) {
             NoteDeleteNotification(
-                key = { viewModel.showNoteDeletionNotification },
-                onDismiss = { viewModel.onEvent(HomeScreenEvent.NotificationDisplayed) },
-                onAction = { viewModel.onEvent(HomeScreenEvent.UndoDeletedNote) },
+                key = { state.showNoteDeletionNotification },
+                onDismiss = { state.onEvent(HomeScreenEvent.NotificationDisplayed) },
+                onAction = { state.onEvent(HomeScreenEvent.UndoDeletedNote) },
                 snackbarHostState = snackBarHostState
             )
         }

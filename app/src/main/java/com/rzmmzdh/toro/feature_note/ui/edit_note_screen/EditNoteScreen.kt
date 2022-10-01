@@ -27,17 +27,17 @@ import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController: NavController) {
+fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: NavController) {
     Scaffold(
         topBar = {
-            EditNoteTopBar(title = viewModel.currentNote.value.category.title, onCategoryClick = {
-                viewModel.onEvent(EditNoteEvent.CategorySelected(it))
+            EditNoteTopBar(title = state.currentNote.value.category.title, onCategoryClick = {
+                state.onEvent(EditNoteEvent.CategorySelected(it))
             })
         },
         floatingActionButton = {
             SaveNoteFab(onClick = {
-                viewModel.onEvent(EditNoteEvent.SaveNote)
-                if (!viewModel.showAlert.value) {
+                state.onEvent(EditNoteEvent.SaveNote)
+                if (!state.showAlert.value) {
                     navController.navigateTo(
                         route = Screen.Home.route
                     )
@@ -51,7 +51,7 @@ fun EditNoteScreen(viewModel: EditNoteViewModel = hiltViewModel(), navController
             )
         }
     ) { paddingValues ->
-        EditNoteBody(paddingValues = paddingValues, viewModel)
+        EditNoteBody(paddingValues = paddingValues, state)
 
     }
 }
@@ -102,7 +102,7 @@ private fun EditNoteTopBar(title: String, onCategoryClick: (NoteCategory) -> Uni
 }
 
 @Composable
-private fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewModel) {
+private fun EditNoteBody(paddingValues: PaddingValues, state: EditNoteViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -115,14 +115,14 @@ private fun EditNoteBody(paddingValues: PaddingValues, viewModel: EditNoteViewMo
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NoteTitleInput(viewModel.currentNote.value.title) {
-            viewModel.onEvent(EditNoteEvent.OnTitleChanged(it))
+        NoteTitleInput(state.currentNote.value.title) {
+            state.onEvent(EditNoteEvent.OnTitleChanged(it))
         }
-        NoteBodyInput(viewModel.currentNote.value.body) {
-            viewModel.onEvent(EditNoteEvent.OnBodyChanged(it))
+        NoteBodyInput(state.currentNote.value.body) {
+            state.onEvent(EditNoteEvent.OnBodyChanged(it))
         }
     }
-    EmptyInputError(viewModel)
+    EmptyInputError(state)
 
 }
 
