@@ -14,7 +14,7 @@ hilt-navigationCompose = "1.0.0"
 kotlinx-dateTime = "0.4.0"
 accompanist = "0.26.4-beta"
 androidApplicationPlugin = "7.3.0-rc01"
-kotlinAndroidPlugin = "1.6.10"
+kotlinAndroidPlugin = "1.6.21"
 
 [libraries]
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
