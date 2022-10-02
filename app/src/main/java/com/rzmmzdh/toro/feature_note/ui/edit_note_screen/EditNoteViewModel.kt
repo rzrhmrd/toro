@@ -75,16 +75,16 @@ class EditNoteViewModel @Inject constructor(
             if (currentNote.value.id != -1) {
                 val existingNote = Note(
                     id = currentNote.value.id,
-                    title = currentNote.value.title,
-                    body = currentNote.value.body,
+                    title = currentNote.value.title.trim(),
+                    body = currentNote.value.body.trim(),
                     category = currentNote.value.category,
                     lastModificationDate = currentNote.value.lastModificationDate
                 )
                 noteUseCases.insertNote(existingNote)
             } else {
                 val newNote = Note(
-                    title = currentNote.value.title,
-                    body = currentNote.value.body,
+                    title = currentNote.value.title.trim(),
+                    body = currentNote.value.body.trim(),
                     category = currentNote.value.category,
                     lastModificationDate = currentNote.value.lastModificationDate
                 )

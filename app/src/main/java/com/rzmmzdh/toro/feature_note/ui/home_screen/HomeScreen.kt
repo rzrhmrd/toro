@@ -25,10 +25,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +40,6 @@ import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.space
 import com.rzmmzdh.toro.theme.style
-import com.rzmmzdh.toro.theme.vazirFontFamily
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -277,7 +273,7 @@ private fun NoteList(
                         .padding(4.dp)
                 ) {
                     DeleteNoteButton(onDeleteIconClick = { onNoteDelete(it) })
-                    Tag(it.category.title)
+                    NoteTag(it.category.title)
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -296,14 +292,14 @@ private fun NoteList(
 }
 
 @Composable
-private fun Tag(tag: String) {
+private fun NoteTag(tag: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(end = 4.dp), contentAlignment = BottomEnd
     ) {
         Text(
-            tag,
+            tag.substringAfter(delimiter = stringResource(R.string.white_space)).trim(),
             modifier = Modifier.alpha(0.5F),
             style = MaterialTheme.style.noteTag,
             fontSize = 14.sp

@@ -9,4 +9,5 @@
     <string name="body">...</string>
     <string name="clear_filter">پاک کردن فیلتر 🧹</string>
     <string name="ok">باشه</string>
+    <string name="white_space">" "</string>
 </resources>
