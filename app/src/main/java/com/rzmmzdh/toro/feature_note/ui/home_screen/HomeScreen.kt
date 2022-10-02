@@ -102,6 +102,45 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchableTopBar(
+    title: String,
+    onValueChange: (String) -> Unit,
+    clearSearchIconVisible: Boolean = false,
+    onCloseSearchIconClick: () -> Unit,
+) {
+    CenterAlignedTopAppBar(title = {
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = title,
+            onValueChange = { onValueChange(it) },
+            textStyle = MaterialTheme.style.searchableTopBarText,
+            placeholder = {
+                Text(
+                    stringResource(id = R.string.toro_title),
+                    style = MaterialTheme.style.topBarTitle,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+            singleLine = true,
+            trailingIcon = {
+                AnimatedVisibility(
+                    visible = clearSearchIconVisible,
+                ) {
+                    Icon(
+                        Icons.Rounded.Close,
+                        null,
+                        modifier = Modifier.clickable(onClick = onCloseSearchIconClick)
+                    )
+                }
+            }
+        )
+    })
+}
+
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun Content(
@@ -143,7 +182,7 @@ private fun ClearFilter(
     AnimatedVisibility(
         visible = state.clearFilterButtonVisible.value,
     ) {
-        InputChip(
+        ElevatedFilterChip(
             modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             selected = false,
             onClick = onClearFilter,
@@ -177,7 +216,7 @@ private fun NoteFilter(
         verticalAlignment = CenterVertically,
     ) {
         NoteCategory.values().forEach { category ->
-            FilterChip(
+            ElevatedFilterChip(
                 modifier = Modifier.padding(4.dp),
                 label = {
                     Text(
@@ -195,45 +234,6 @@ private fun NoteFilter(
             )
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SearchableTopBar(
-    title: String,
-    onValueChange: (String) -> Unit,
-    clearSearchIconVisible: Boolean = false,
-    onCloseSearchIconClick: () -> Unit,
-) {
-    CenterAlignedTopAppBar(title = {
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = title,
-            onValueChange = { onValueChange(it) },
-            textStyle = MaterialTheme.style.searchableTopBarText,
-            placeholder = {
-                Text(
-                    stringResource(id = R.string.toro_title),
-                    style = MaterialTheme.style.topBarTitle,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-            singleLine = true,
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = clearSearchIconVisible,
-                ) {
-                    Icon(
-                        Icons.Rounded.Close,
-                        null,
-                        modifier = Modifier.clickable(onClick = onCloseSearchIconClick)
-                    )
-                }
-            }
-        )
-    })
 }
 
 @OptIn(ExperimentalFoundationApi::class)
