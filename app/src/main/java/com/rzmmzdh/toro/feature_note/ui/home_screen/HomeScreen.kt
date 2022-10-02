@@ -7,6 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
@@ -62,7 +63,7 @@ fun HomeScreen(
                         noteListState.animateScrollToItem(0)
 
                     }
-                }
+                },
             )
         },
         bottomBar = {
@@ -108,7 +109,7 @@ private fun SearchableTopBar(
     title: String,
     onValueChange: (String) -> Unit,
     clearSearchIconVisible: Boolean = false,
-    onCloseSearchIconClick: () -> Unit,
+    onCloseSearchIconClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(title = {
         TextField(
@@ -142,7 +143,6 @@ private fun SearchableTopBar(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun Content(
     paddingValues: PaddingValues,
     state: HomeScreenViewModel,
