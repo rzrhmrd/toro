@@ -3,6 +3,7 @@ package com.rzmmzdh.toro.feature_note.data.datasource.local
 import com.rzmmzdh.toro.feature_note.data.datasource.NoteDataSource
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.domain.model.asNoteEntity
+import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -31,5 +32,9 @@ class LocalDataSource @Inject constructor(private val noteDao: NoteDao) : NoteDa
 
     override fun searchNotes(query: String): Flow<List<Note>> {
         return noteDao.searchNotes(query)
+    }
+
+    override fun getNotesByCategory(category: NoteCategory): Flow<List<Note>> {
+        return noteDao.getNotesByCategory(category)
     }
 }
