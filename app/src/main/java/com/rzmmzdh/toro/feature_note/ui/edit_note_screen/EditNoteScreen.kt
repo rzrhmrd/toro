@@ -169,7 +169,7 @@ private fun EmptyInputError(viewModel: EditNoteViewModel) {
                         viewModel.onEvent(EditNoteEvent.AlertShown)
                     }
                 ) {
-                    Text("باشه", style = MaterialTheme.style.errorBoxButton)
+                    Text(stringResource(R.string.ok), style = MaterialTheme.style.errorBoxButton)
                 }
             },
         )

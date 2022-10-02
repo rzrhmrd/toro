@@ -83,7 +83,7 @@ fun HomeScreen(
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
-        Content(
+        Notes(
             paddingValues = paddingValues,
             state = state,
             noteListState = noteListState,
@@ -160,7 +160,7 @@ private fun SearchableTopBar(
 }
 
 @Composable
-private fun Content(
+private fun Notes(
     paddingValues: PaddingValues,
     state: HomeScreenViewModel,
     noteListState: LazyGridState,
@@ -203,15 +203,10 @@ private fun ClearFilter(
             modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             selected = false,
             onClick = onClearFilter,
-//            border = InputChipDefaults.inputChipBorder(borderColor = MaterialTheme.colorScheme.tertiary),
             label = {
                 Text(
-                    "پاک کردن فیلتر 🧹",
-                    style = TextStyle(
-                        fontFamily = vazirFontFamily,
-                        textDirection = TextDirection.ContentOrRtl,
-                        textAlign = TextAlign.Center, fontSize = 14.sp
-                    )
+                    stringResource(R.string.clear_filter),
+                    style = MaterialTheme.style.clearFilter
                 )
             })
     }
@@ -238,12 +233,7 @@ private fun NoteFilter(
                 label = {
                     Text(
                         category.title,
-                        style = TextStyle(
-                            fontFamily = vazirFontFamily,
-                            textDirection = TextDirection.ContentOrRtl,
-                            textAlign = TextAlign.Center,
-                            fontSize = 16.sp
-                        )
+                        style = MaterialTheme.style.categoryItem
                     )
                 },
                 selected = (category == state.selectedCategory.value),
@@ -315,11 +305,7 @@ private fun Tag(tag: String) {
         Text(
             tag,
             modifier = Modifier.alpha(0.5F),
-            style = TextStyle(
-                fontFamily = vazirFontFamily,
-                textDirection = TextDirection.ContentOrRtl,
-                textAlign = TextAlign.Center
-            ),
+            style = MaterialTheme.style.noteTag,
             fontSize = 14.sp
         )
     }

@@ -27,16 +27,20 @@ data class Style(
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
     ),
-    val topBarTitle: TextStyle = TextStyle(fontFamily = vazirFontFamily,
+    val topBarTitle: TextStyle = TextStyle(
+        fontFamily = vazirFontFamily,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         textDirection = TextDirection.ContentOrRtl,
-        textAlign = TextAlign.Center),
-    val searchableTopBarText: TextStyle = TextStyle(fontFamily = vazirFontFamily,
+        textAlign = TextAlign.Center
+    ),
+    val searchableTopBarText: TextStyle = TextStyle(
+        fontFamily = vazirFontFamily,
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold,
         textDirection = TextDirection.ContentOrRtl,
-        textAlign = TextAlign.Center),
+        textAlign = TextAlign.Center
+    ),
     val errorBoxTitle: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
         textDirection = TextDirection.ContentOrRtl,
@@ -77,13 +81,33 @@ data class Style(
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
     ),
-    val categoryList: TextStyle = TextStyle(fontFamily = vazirFontFamily,
+    val categoryList: TextStyle = TextStyle(
+        fontFamily = vazirFontFamily,
         fontSize = 18.sp,
         fontWeight = FontWeight.Medium,
         textDirection = TextDirection.ContentOrRtl,
-        textAlign = TextAlign.Center),
+        textAlign = TextAlign.Center
+    ),
 
+    val categoryItem: TextStyle = TextStyle(
+        fontFamily = vazirFontFamily,
+        textDirection = TextDirection.ContentOrRtl,
+        textAlign = TextAlign.Center,
+        fontSize = 16.sp
+    ),
+
+    val clearFilter: TextStyle = TextStyle(
+        fontFamily = vazirFontFamily,
+        textDirection = TextDirection.ContentOrRtl,
+        textAlign = TextAlign.Center, fontSize = 14.sp
+    ),
+
+    val noteTag: TextStyle = TextStyle(
+        fontFamily = vazirFontFamily,
+        textDirection = TextDirection.ContentOrRtl,
+        textAlign = TextAlign.Center
     )
+)
 
 
 val LocalStyle = staticCompositionLocalOf { Style() }
