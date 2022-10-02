@@ -7,6 +7,8 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
@@ -19,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,7 +67,10 @@ fun HomeScreen(
                         noteListState.animateScrollToItem(0)
                     }
                     inputFocusManager.clearFocus()
-                },
+                }, onSearch = {
+                    state.onEvent(HomeScreenEvent.Search(it))
+                    inputFocusManager.clearFocus()
+                }
             )
         },
         bottomBar = {
@@ -110,7 +116,8 @@ private fun SearchableTopBar(
     title: String,
     onValueChange: (String) -> Unit,
     clearSearchIconVisible: Boolean = false,
-    onCloseSearchIconClick: () -> Unit
+    onCloseSearchIconClick: () -> Unit,
+    onSearch: (String) -> Unit
 ) {
     CenterAlignedTopAppBar(title = {
         TextField(
@@ -119,6 +126,8 @@ private fun SearchableTopBar(
             value = title,
             onValueChange = { onValueChange(it) },
             textStyle = MaterialTheme.style.searchableTopBarText,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { onSearch(title) }),
             placeholder = {
                 Text(
                     stringResource(id = R.string.toro_title),
