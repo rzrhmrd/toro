@@ -129,25 +129,35 @@ private fun Content(
                 onNoteDelete = { state.onEvent(HomeScreenEvent.DeleteNote(it)) },
             )
         }
-        AnimatedVisibility(
-            visible = state.clearFilterButtonVisible.value,
-        ) {
-            InputChip(
-                modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
-                selected = false,
-                onClick = onClearFilter,
-                border = InputChipDefaults.inputChipBorder(borderColor = MaterialTheme.colorScheme.error),
-                label = {
-                    Text(
-                        "حذف فیلتر ❌",
-                        style = TextStyle(
-                            fontFamily = vazirFontFamily,
-                            textDirection = TextDirection.ContentOrRtl,
-                            textAlign = TextAlign.Center, fontSize = 16.sp
-                        )
+        ClearFilter(state, paddingValues, onClearFilter)
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun ClearFilter(
+    state: HomeScreenViewModel,
+    paddingValues: PaddingValues,
+    onClearFilter: () -> Unit
+) {
+    AnimatedVisibility(
+        visible = state.clearFilterButtonVisible.value,
+    ) {
+        InputChip(
+            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+            selected = false,
+            onClick = onClearFilter,
+//            border = InputChipDefaults.inputChipBorder(borderColor = MaterialTheme.colorScheme.tertiary),
+            label = {
+                Text(
+                    "پاک کردن فیلتر 🧹",
+                    style = TextStyle(
+                        fontFamily = vazirFontFamily,
+                        textDirection = TextDirection.ContentOrRtl,
+                        textAlign = TextAlign.Center, fontSize = 14.sp
                     )
-                })
-        }
+                )
+            })
     }
 }
 
