@@ -7,7 +7,6 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
@@ -17,6 +16,7 @@ import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -48,6 +48,7 @@ fun HomeScreen(
     val snackBarHostState = remember { SnackbarHostState() }
     val noteListState = rememberLazyGridState()
     val coroutineScope = rememberCoroutineScope()
+    val inputFocusManager = LocalFocusManager.current
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -61,8 +62,8 @@ fun HomeScreen(
                     state.onEvent(HomeScreenEvent.ClearSearchBox)
                     coroutineScope.launch {
                         noteListState.animateScrollToItem(0)
-
                     }
+                    inputFocusManager.clearFocus()
                 },
             )
         },
@@ -134,7 +135,9 @@ private fun SearchableTopBar(
                     Icon(
                         Icons.Rounded.Close,
                         null,
-                        modifier = Modifier.clickable(onClick = onCloseSearchIconClick)
+                        modifier = Modifier.clickable(onClick = {
+                            onCloseSearchIconClick()
+                        })
                     )
                 }
             }
