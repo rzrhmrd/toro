@@ -1,6 +1,6 @@
 package com.rzmmzdh.toro.feature_note.ui.home_screen
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -12,11 +12,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -282,6 +287,7 @@ private fun NoteList(
                         .padding(4.dp)
                 ) {
                     DeleteNoteButton(onDeleteIconClick = { onNoteDelete(it) })
+                    Tag(it.category.title)
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -300,14 +306,39 @@ private fun NoteList(
 }
 
 @Composable
+private fun Tag(tag: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 4.dp, end = 4.dp), contentAlignment = BottomEnd
+    ) {
+        Text(
+            tag,
+            modifier = Modifier.alpha(0.5F),
+            style = TextStyle(
+                fontFamily = vazirFontFamily,
+                textDirection = TextDirection.ContentOrRtl,
+                textAlign = TextAlign.Center
+            ),
+            fontSize = 14.sp
+        )
+    }
+}
+
+@Composable
 private fun DeleteNoteButton(
     onDeleteIconClick: () -> Unit,
 ) {
     IconButton(
         onClick = onDeleteIconClick,
-        modifier = Modifier.size(20.dp)
+        modifier = Modifier
+            .size(20.dp)
     ) {
-        Icon(Icons.Rounded.Close, null, modifier = Modifier.size(16.dp))
+        Icon(
+            Icons.Rounded.Close, null, modifier = Modifier
+                .size(18.dp)
+                .alpha(0.5F)
+        )
     }
 }
 
