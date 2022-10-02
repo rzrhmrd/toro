@@ -57,7 +57,7 @@ fun HomeScreen(
                 onValueChange = {
                     state.onEvent(HomeScreenEvent.Search(it))
                 },
-                clearSearchIconVisible = state.searchQuery.value.isNotBlank(),
+                clearSearchIconVisible = state.clearSearchIconVisible.value,
                 onCloseSearchIconClick = {
                     state.onEvent(HomeScreenEvent.ClearSearchBox)
                     coroutineScope.launch {

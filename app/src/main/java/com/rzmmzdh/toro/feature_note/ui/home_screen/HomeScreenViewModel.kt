@@ -18,6 +18,8 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
 ) : ViewModel() {
+    var clearSearchIconVisible = mutableStateOf(false)
+        private set
     var clearFilterButtonVisible = mutableStateOf(false)
         private set
     var notes = mutableStateOf(NoteListUiState())
@@ -52,11 +54,15 @@ class HomeScreenViewModel @Inject constructor(
                     showNoteDeletionNotification.value = !showNoteDeletionNotification.value
                 }
                 is HomeScreenEvent.Search -> {
-                    searchQuery.value = event.value
+                    if (!clearSearchIconVisible.value) {
+                        clearSearchIconVisible.value = !clearSearchIconVisible.value
+                    }
                     searchNotes(event.value)
+                    searchQuery.value = event.value
                 }
                 is HomeScreenEvent.ClearSearchBox -> {
                     searchNotes("")
+                    clearSearchIconVisible.value = !clearSearchIconVisible.value
 
                 }
                 is HomeScreenEvent.UndoDeletedNote,
