@@ -61,7 +61,9 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
         EditNoteBody(paddingValues = paddingValues, state, onDone = {
             state.onEvent(EditNoteEvent.SaveNote)
             inputFocusManager.clearFocus()
-            navController.navigateTo(Screen.Home.route)
+            if (!state.showAlert.value) {
+                navController.navigateTo(Screen.Home.route)
+            }
         })
 
     }
