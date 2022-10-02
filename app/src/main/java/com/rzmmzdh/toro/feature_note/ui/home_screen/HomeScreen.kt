@@ -20,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.TopEnd
+import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
@@ -268,12 +270,12 @@ private fun NoteList(
 
             ) {
                 Box(
-                    contentAlignment = Alignment.TopStart, modifier = Modifier
+                    modifier = Modifier
                         .fillMaxSize()
-                        .padding(4.dp)
+                        .padding(8.dp)
                 ) {
-                    DeleteNoteButton(onDeleteIconClick = { onNoteDelete(it) })
-                    NoteTag(it.category.title)
+                    NoteTag(tag = it.category.title)
+                    NoteDeleteButton(onDeleteIconClick = { onNoteDelete(it) })
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -281,11 +283,11 @@ private fun NoteList(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        NoteItemTitle(note = it)
-                        NoteItemBody(note = it)
+                        NoteTitle(note = it)
+                        NoteBody(note = it)
                     }
-
                 }
+
             }
         }
     }
@@ -295,12 +297,11 @@ private fun NoteList(
 private fun NoteTag(tag: String) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(end = 4.dp), contentAlignment = BottomEnd
+            .fillMaxSize(), contentAlignment = BottomEnd
     ) {
         Text(
             tag.substringAfter(delimiter = stringResource(R.string.white_space)).trim(),
-            modifier = Modifier.alpha(0.5F),
+            modifier = Modifier.alpha(0.5F).padding(end = 4.dp),
             style = MaterialTheme.style.noteTag,
             fontSize = 14.sp
         )
@@ -308,24 +309,29 @@ private fun NoteTag(tag: String) {
 }
 
 @Composable
-private fun DeleteNoteButton(
+private fun NoteDeleteButton(
     onDeleteIconClick: () -> Unit,
 ) {
-    IconButton(
-        onClick = onDeleteIconClick,
+    Box(
         modifier = Modifier
-            .size(20.dp)
+            .fillMaxSize(), contentAlignment = TopStart
     ) {
-        Icon(
-            Icons.Rounded.Close, null, modifier = Modifier
+        IconButton(
+            onClick = onDeleteIconClick,
+            modifier = Modifier
                 .size(18.dp)
-                .alpha(0.5F)
-        )
+        ) {
+            Icon(
+                Icons.Rounded.Close, null, modifier = Modifier
+                    .size(18.dp)
+                    .alpha(0.5F)
+            )
+        }
     }
 }
 
 @Composable
-private fun NoteItemTitle(note: Note) {
+private fun NoteTitle(note: Note) {
     Text(
         note.title,
         style = MaterialTheme.style.noteCardTitle, maxLines = 1,
@@ -334,7 +340,7 @@ private fun NoteItemTitle(note: Note) {
 }
 
 @Composable
-private fun NoteItemBody(note: Note) {
+private fun NoteBody(note: Note) {
     Text(
         note.body,
         style =
