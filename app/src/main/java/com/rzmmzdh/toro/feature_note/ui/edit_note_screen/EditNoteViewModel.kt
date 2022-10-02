@@ -30,6 +30,10 @@ class EditNoteViewModel @Inject constructor(
         private set
 
     init {
+        getNoteFromHomeScreen(savedStateHandle)
+    }
+
+    private fun getNoteFromHomeScreen(savedStateHandle: SavedStateHandle) {
         savedStateHandle.get<Int>("noteId")?.let { noteId ->
             viewModelScope.launch {
                 currentNote.value = currentNote.value.copy(id = noteId)
@@ -52,30 +56,7 @@ class EditNoteViewModel @Inject constructor(
     fun onEvent(event: EditNoteEvent) {
         viewModelScope.launch {
             when (event) {
-                is EditNoteEvent.SaveNote -> {
-                    if (currentNote.value.title.isNotBlank() || currentNote.value.body.isNotBlank()) {
-                        if (currentNote.value.id != -1) {
-                            val existingNote = Note(
-                                id = currentNote.value.id,
-                                title = currentNote.value.title,
-                                body = currentNote.value.body,
-                                category = currentNote.value.category,
-                                lastModificationDate = currentNote.value.lastModificationDate
-                            )
-                            noteUseCases.insertNote(existingNote)
-                        } else {
-                            val newNote = Note(
-                                title = currentNote.value.title,
-                                body = currentNote.value.body,
-                                category = currentNote.value.category,
-                                lastModificationDate = currentNote.value.lastModificationDate
-                            )
-                            noteUseCases.insertNote(newNote)
-                        }
-                    } else {
-                        showAlert.value = !showAlert.value
-                    }
-                }
+                is EditNoteEvent.SaveNote -> saveNote()
                 is EditNoteEvent.OnTitleChanged -> currentNote.value =
                     currentNote.value.copy(title = event.value)
                 is EditNoteEvent.OnBodyChanged -> currentNote.value =
@@ -87,6 +68,31 @@ class EditNoteViewModel @Inject constructor(
             }
         }
 
+    }
+
+    private suspend fun saveNote() {
+        if (currentNote.value.title.isNotBlank() || currentNote.value.body.isNotBlank()) {
+            if (currentNote.value.id != -1) {
+                val existingNote = Note(
+                    id = currentNote.value.id,
+                    title = currentNote.value.title,
+                    body = currentNote.value.body,
+                    category = currentNote.value.category,
+                    lastModificationDate = currentNote.value.lastModificationDate
+                )
+                noteUseCases.insertNote(existingNote)
+            } else {
+                val newNote = Note(
+                    title = currentNote.value.title,
+                    body = currentNote.value.body,
+                    category = currentNote.value.category,
+                    lastModificationDate = currentNote.value.lastModificationDate
+                )
+                noteUseCases.insertNote(newNote)
+            }
+        } else {
+            showAlert.value = !showAlert.value
+        }
     }
 
 }

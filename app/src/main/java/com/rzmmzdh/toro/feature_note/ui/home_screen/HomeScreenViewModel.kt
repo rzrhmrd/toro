@@ -15,9 +15,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(
-    private val noteUseCases: NoteUseCases,
-) : ViewModel() {
+class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseCases) :
+    ViewModel() {
     var clearSearchIconVisible = mutableStateOf(false)
         private set
     var clearFilterButtonVisible = mutableStateOf(false)
@@ -36,6 +35,10 @@ class HomeScreenViewModel @Inject constructor(
         private set
 
     init {
+        getAllNotes()
+    }
+
+    private fun getAllNotes() {
         viewModelScope.launch {
             noteUseCases.getAllNotes().collectLatest {
                 notes.value = notes.value.copy(notes = it)
@@ -47,11 +50,7 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             when (event) {
                 is HomeScreenEvent.DeleteNote -> {
-                    deletedNote = event.note
-                    noteUseCases.deleteNote(event.note)
-                    if (showNoteDeletionNotification.value) showNoteDeletionNotification.value =
-                        !showNoteDeletionNotification.value
-                    showNoteDeletionNotification.value = !showNoteDeletionNotification.value
+                    deleteNote(event)
                 }
                 is HomeScreenEvent.Search -> {
                     if (!clearSearchIconVisible.value) {
@@ -73,8 +72,10 @@ class HomeScreenViewModel @Inject constructor(
                     deletedNote?.let { noteUseCases.insertNote(it) }
                     deletedNote = null
                 }
-                HomeScreenEvent.NotificationDisplayed -> showNoteDeletionNotification.value =
-                    !showNoteDeletionNotification.value
+                HomeScreenEvent.NotificationDisplayed -> {
+                    showNoteDeletionNotification.value =
+                        !showNoteDeletionNotification.value
+                }
                 is HomeScreenEvent.OnFilterItemSelected -> {
                     selectedCategory.value = event.filter
                     viewModelScope.launch {
@@ -93,6 +94,16 @@ class HomeScreenViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun deleteNote(
+        event: HomeScreenEvent.DeleteNote,
+    ) {
+        deletedNote = event.note
+        noteUseCases.deleteNote(event.note)
+        if (showNoteDeletionNotification.value) showNoteDeletionNotification.value =
+            !showNoteDeletionNotification.value
+        showNoteDeletionNotification.value = !showNoteDeletionNotification.value
     }
 
     private fun searchNotes(query: String) {
