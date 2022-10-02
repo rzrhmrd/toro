@@ -228,7 +228,7 @@ private fun NoteFilter(
             .fillMaxWidth()
             .height(48.dp)
             .padding(start = 4.dp, end = 8.dp)
-            .horizontalScroll(rememberScrollState()),
+            .horizontalScroll(rememberScrollState(), reverseScrolling = true),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = CenterVertically,
     ) {
