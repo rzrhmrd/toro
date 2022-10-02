@@ -1,11 +1,12 @@
 package com.rzmmzdh.toro.feature_note.ui.home_screen
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.domain.usecase.NoteUseCases
+import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -17,14 +18,19 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
 ) : ViewModel() {
+    var clearFilterButtonVisible = mutableStateOf(false)
+        private set
     var notes = mutableStateOf(NoteListUiState())
         private set
     var searchQuery = mutableStateOf("")
         private set
     var showNoteDeletionNotification = mutableStateOf(false)
         private set
-    private var searchNotesJob: Job? = null
+    var searchNotesJob: Job? = null
+        private set
     var deletedNote: Note? = null
+        private set
+    var selectedCategory: MutableState<NoteCategory?> = mutableStateOf(null)
         private set
 
     init {
@@ -63,6 +69,22 @@ class HomeScreenViewModel @Inject constructor(
                 }
                 HomeScreenEvent.NotificationDisplayed -> showNoteDeletionNotification.value =
                     !showNoteDeletionNotification.value
+                is HomeScreenEvent.OnFilterItemSelected -> {
+                    selectedCategory.value = event.filter
+                    viewModelScope.launch {
+                        noteUseCases.getNotesByCategory(event.filter).collectLatest {
+                            notes.value = notes.value.copy(notes = it)
+                        }
+                    }
+                    clearFilterButtonVisible.value = true
+                }
+                is HomeScreenEvent.OnClearFilter -> {
+                    selectedCategory.value = null
+                    clearFilterButtonVisible.value = !clearFilterButtonVisible.value
+                    noteUseCases.getAllNotes().collectLatest {
+                        notes.value = notes.value.copy(notes = it)
+                    }
+                }
             }
         }
     }

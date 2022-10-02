@@ -1,6 +1,7 @@
 package com.rzmmzdh.toro.feature_note.ui.home_screen
 
 import com.rzmmzdh.toro.feature_note.domain.model.Note
+import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 
 
 sealed class HomeScreenEvent {
@@ -9,4 +10,6 @@ sealed class HomeScreenEvent {
     object UndoDeletedNote : HomeScreenEvent()
     object ClearSearchBox : HomeScreenEvent()
     object NotificationDisplayed : HomeScreenEvent()
+    data class OnFilterItemSelected(val filter: NoteCategory) : HomeScreenEvent()
+    object OnClearFilter : HomeScreenEvent()
 }
