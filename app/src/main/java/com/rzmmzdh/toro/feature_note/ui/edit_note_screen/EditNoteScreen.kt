@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import kotlin.random.Random
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: NavController) {
+    val inputFocusManager = LocalFocusManager.current
     Scaffold(
         topBar = {
             EditNoteTopBar(title = state.currentNote.value.category.title, onCategoryClick = {
@@ -37,6 +39,7 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
         floatingActionButton = {
             SaveNoteFab(onClick = {
                 state.onEvent(EditNoteEvent.SaveNote)
+                inputFocusManager.clearFocus()
                 if (!state.showAlert.value) {
                     navController.navigateTo(
                         route = Screen.Home.route
