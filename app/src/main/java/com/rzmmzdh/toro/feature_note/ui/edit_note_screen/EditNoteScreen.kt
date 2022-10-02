@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -176,6 +177,7 @@ private fun EmptyInputError(viewModel: EditNoteViewModel) {
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
+    val inputFocusManager = LocalFocusManager.current
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -188,6 +190,8 @@ private fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
             )
         },
         singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        keyboardActions = KeyboardActions(onNext = { inputFocusManager.moveFocus(FocusDirection.Down) }),
         modifier = Modifier
             .fillMaxWidth()
             .height(MaterialTheme.size.noteTitleInputHeight)
