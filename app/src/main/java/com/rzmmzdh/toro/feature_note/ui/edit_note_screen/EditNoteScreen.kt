@@ -141,7 +141,6 @@ private fun EditNoteBody(
             onValueChange = {
                 state.onEvent(EditNoteEvent.OnBodyChanged(it))
             },
-            onDone = onDone
         )
     }
     EmptyInputError(state)
@@ -206,7 +205,6 @@ private fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
 private fun NoteBodyInput(
     value: String,
     onValueChange: (String) -> Unit,
-    onDone: () -> Unit
 ) {
     TextField(
         value = value,
@@ -219,8 +217,6 @@ private fun NoteBodyInput(
                 modifier = Modifier.fillMaxWidth()
             )
         },
-        keyboardActions = KeyboardActions(onDone = { onDone() }),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.size.noteBodyInputPadding),

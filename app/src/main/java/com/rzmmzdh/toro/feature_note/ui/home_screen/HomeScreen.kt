@@ -300,7 +300,7 @@ private fun Tag(tag: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 4.dp, end = 4.dp), contentAlignment = BottomEnd
+            .padding(end = 4.dp), contentAlignment = BottomEnd
     ) {
         Text(
             tag,
