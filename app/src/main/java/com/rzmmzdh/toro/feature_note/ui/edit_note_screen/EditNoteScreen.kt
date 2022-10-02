@@ -1,6 +1,8 @@
 package com.rzmmzdh.toro.feature_note.ui.edit_note_screen
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Info
@@ -13,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,7 +57,11 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
             )
         }
     ) { paddingValues ->
-        EditNoteBody(paddingValues = paddingValues, state)
+        EditNoteBody(paddingValues = paddingValues, state, onDone = {
+            state.onEvent(EditNoteEvent.SaveNote)
+            inputFocusManager.clearFocus()
+            navController.navigateTo(Screen.Home.route)
+        })
 
     }
 }
@@ -105,7 +112,11 @@ private fun EditNoteTopBar(title: String, onCategoryClick: (NoteCategory) -> Uni
 }
 
 @Composable
-private fun EditNoteBody(paddingValues: PaddingValues, state: EditNoteViewModel) {
+private fun EditNoteBody(
+    paddingValues: PaddingValues,
+    state: EditNoteViewModel,
+    onDone: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,12 +129,17 @@ private fun EditNoteBody(paddingValues: PaddingValues, state: EditNoteViewModel)
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NoteTitleInput(state.currentNote.value.title) {
+        NoteTitleInput(value = state.currentNote.value.title, onValueChange = {
             state.onEvent(EditNoteEvent.OnTitleChanged(it))
-        }
-        NoteBodyInput(state.currentNote.value.body) {
-            state.onEvent(EditNoteEvent.OnBodyChanged(it))
-        }
+        })
+        NoteBodyInput(
+            value =
+            state.currentNote.value.body,
+            onValueChange = {
+                state.onEvent(EditNoteEvent.OnBodyChanged(it))
+            },
+            onDone = onDone
+        )
     }
     EmptyInputError(state)
 
@@ -181,7 +197,11 @@ private fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun NoteBodyInput(value: String, onValueChange: (String) -> Unit) {
+private fun NoteBodyInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    onDone: () -> Unit
+) {
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -193,6 +213,8 @@ private fun NoteBodyInput(value: String, onValueChange: (String) -> Unit) {
                 modifier = Modifier.fillMaxWidth()
             )
         },
+        keyboardActions = KeyboardActions(onDone = { onDone() }),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.size.noteBodyInputPadding),
