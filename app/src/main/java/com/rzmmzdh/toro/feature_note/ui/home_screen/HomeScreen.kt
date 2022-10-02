@@ -333,8 +333,8 @@ private fun NoteDeleteNotification(
     LaunchedEffect(key1 = key) {
         val noteDeletedMessage =
             snackbarHostState.showSnackbar(
-                message = "یادداشت حذف شد.",
-                actionLabel = "برگشت",
+                message = "Note deleted.",
+                actionLabel = "Undo",
                 duration = SnackbarDuration.Long
             )
         when (noteDeletedMessage) {
