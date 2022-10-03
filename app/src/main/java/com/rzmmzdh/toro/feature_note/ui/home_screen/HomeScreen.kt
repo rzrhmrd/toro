@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -36,6 +37,7 @@ import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
+import com.rzmmzdh.toro.feature_note.ui.core.component.ToroFab
 import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.space
@@ -74,7 +76,15 @@ fun HomeScreen(
                 }
             )
         },
-        floatingActionButton = { ToroFab(navController) },
+        floatingActionButton = {
+            ToroFab(onClick = { navController.navigate(Screen.EditNote.route) }, icon = {
+                Icon(
+                    Icons.Rounded.Add,
+                    null,
+                    modifier = Modifier.size(36.dp)
+                )
+            })
+        },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
         Notes(
@@ -106,13 +116,6 @@ fun HomeScreen(
             )
         }
 
-    }
-}
-
-@Composable
-fun ToroFab(navController: NavController) {
-    LargeFloatingActionButton(onClick = { navController.navigate(Screen.EditNote.route) }) {
-        Icon(Icons.Rounded.Add, null, modifier = Modifier.size(36.dp))
     }
 }
 
