@@ -47,22 +47,22 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
     fun onEvent(event: HomeScreenEvent) {
         viewModelScope.launch {
             when (event) {
-                is HomeScreenEvent.DeleteNote -> {
+                is HomeScreenEvent.OnNoteDelete -> {
                     deleteNote(event)
                 }
-                is HomeScreenEvent.Search -> {
+                is HomeScreenEvent.OnSearch -> {
                     if (!search.value.isClearSearchIconVisible) {
                         search.value = search.value.copy(isClearSearchIconVisible = true)
                     }
                     searchNotes(event.value)
                     search.value = search.value.copy(searchQuery = event.value)
                 }
-                is HomeScreenEvent.ClearSearchBox -> {
+                is HomeScreenEvent.OnClearSearchBox -> {
                     searchNotes("")
                     search.value = search.value.copy(isClearSearchIconVisible = false)
 
                 }
-                is HomeScreenEvent.UndoDeletedNote,
+                is HomeScreenEvent.OnUndoNoteDelete,
                 -> {
                     if (showNoteDeleteNotification.value) {
                         showNoteDeleteNotification.value = !showNoteDeleteNotification.value
@@ -74,7 +74,7 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
                     showNoteDeleteNotification.value =
                         !showNoteDeleteNotification.value
                 }
-                is HomeScreenEvent.OnFilterItemSelected -> {
+                is HomeScreenEvent.OnFilterItemSelect -> {
                     selectedCategory.value = event.filter
                     viewModelScope.launch {
                         noteUseCases.getNotesByCategory(event.filter).collectLatest {
@@ -95,7 +95,7 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
     }
 
     private suspend fun deleteNote(
-        event: HomeScreenEvent.DeleteNote,
+        event: HomeScreenEvent.OnNoteDelete,
     ) {
         deletedNote = event.note
         noteUseCases.deleteNote(event.note)

@@ -37,12 +37,12 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
     Scaffold(
         topBar = {
             EditNoteTopBar(title = state.currentNote.value.category.title, onCategoryClick = {
-                state.onEvent(EditNoteEvent.CategorySelected(it))
+                state.onEvent(EditNoteEvent.OnCategorySelect(it))
             })
         },
         floatingActionButton = {
             SaveNoteFab(onClick = {
-                state.onEvent(EditNoteEvent.SaveNote)
+                state.onEvent(EditNoteEvent.OnNoteSave)
                 inputFocusManager.clearFocus()
                 if (!state.currentNote.value.isEmpty) {
                     navController.navigateTo(
@@ -59,7 +59,7 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
         }
     ) { paddingValues ->
         EditNoteBody(paddingValues = paddingValues, state, onDone = {
-            state.onEvent(EditNoteEvent.SaveNote)
+            state.onEvent(EditNoteEvent.OnNoteSave)
             inputFocusManager.clearFocus()
             if (!state.currentNote.value.isEmpty) {
                 navController.navigateTo(Screen.Home.route)
@@ -133,13 +133,13 @@ private fun EditNoteBody(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         NoteTitleInput(value = state.currentNote.value.title, onValueChange = {
-            state.onEvent(EditNoteEvent.OnTitleChanged(it))
+            state.onEvent(EditNoteEvent.OnTitleChange(it))
         })
         NoteBodyInput(
             value =
             state.currentNote.value.body,
             onValueChange = {
-                state.onEvent(EditNoteEvent.OnBodyChanged(it))
+                state.onEvent(EditNoteEvent.OnBodyChange(it))
             },
         )
     }

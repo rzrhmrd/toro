@@ -60,17 +60,17 @@ fun HomeScreen(
             SearchableTopBar(
                 title = state.search.value.searchQuery,
                 onValueChange = {
-                    state.onEvent(HomeScreenEvent.Search(it))
+                    state.onEvent(HomeScreenEvent.OnSearch(it))
                 },
                 clearSearchIconVisible = state.search.value.isClearSearchIconVisible,
                 onCloseSearchIconClick = {
-                    state.onEvent(HomeScreenEvent.ClearSearchBox)
+                    state.onEvent(HomeScreenEvent.OnClearSearchBox)
                     coroutineScope.launch {
                         noteListState.animateScrollToItem(0)
                     }
                     inputFocusManager.clearFocus()
                 }, onSearch = {
-                    state.onEvent(HomeScreenEvent.Search(it))
+                    state.onEvent(HomeScreenEvent.OnSearch(it))
                     inputFocusManager.clearFocus()
                 }
             )
@@ -85,7 +85,7 @@ fun HomeScreen(
             state = state,
             noteListState = noteListState,
             onFilterItemSelected = {
-                state.onEvent(HomeScreenEvent.OnFilterItemSelected(it))
+                state.onEvent(HomeScreenEvent.OnFilterItemSelect(it))
                 coroutineScope.launch { noteListState.animateScrollToItem(0) }
             }, onClearFilter = {
                 state.onEvent(HomeScreenEvent.OnClearFilter)
@@ -104,7 +104,7 @@ fun HomeScreen(
             NoteDeleteNotification(
                 key = { state.showNoteDeleteNotification },
                 onDismiss = { state.onEvent(HomeScreenEvent.NotificationDisplayed) },
-                onAction = { state.onEvent(HomeScreenEvent.UndoDeletedNote) },
+                onAction = { state.onEvent(HomeScreenEvent.OnUndoNoteDelete) },
                 snackbarHostState = snackBarHostState
             )
         }
@@ -179,7 +179,7 @@ private fun Notes(
                 listState = noteListState,
                 notes = state.notes.value.notes,
                 onNoteClick = onNoteClick,
-                onNoteDelete = { state.onEvent(HomeScreenEvent.DeleteNote(it)) },
+                onNoteDelete = { state.onEvent(HomeScreenEvent.OnNoteDelete(it)) },
             )
         }
         ClearFilter(state, paddingValues, onClearFilter)

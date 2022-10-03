@@ -5,11 +5,11 @@ import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 
 
 sealed class HomeScreenEvent {
-    data class DeleteNote(val note: Note) : HomeScreenEvent()
-    data class Search(val value: String) : HomeScreenEvent()
-    object UndoDeletedNote : HomeScreenEvent()
-    object ClearSearchBox : HomeScreenEvent()
+    data class OnNoteDelete(val note: Note) : HomeScreenEvent()
+    data class OnSearch(val value: String) : HomeScreenEvent()
+    object OnUndoNoteDelete : HomeScreenEvent()
+    object OnClearSearchBox : HomeScreenEvent()
     object NotificationDisplayed : HomeScreenEvent()
-    data class OnFilterItemSelected(val filter: NoteCategory) : HomeScreenEvent()
+    data class OnFilterItemSelect(val filter: NoteCategory) : HomeScreenEvent()
     object OnClearFilter : HomeScreenEvent()
 }

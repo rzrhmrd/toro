@@ -46,12 +46,12 @@ class EditNoteViewModel @Inject constructor(
     fun onEvent(event: EditNoteEvent) {
         viewModelScope.launch {
             when (event) {
-                is EditNoteEvent.SaveNote -> saveNote()
-                is EditNoteEvent.OnTitleChanged -> currentNote.value =
+                is EditNoteEvent.OnNoteSave -> saveNote()
+                is EditNoteEvent.OnTitleChange -> currentNote.value =
                     currentNote.value.copy(title = event.value)
-                is EditNoteEvent.OnBodyChanged -> currentNote.value =
+                is EditNoteEvent.OnBodyChange -> currentNote.value =
                     currentNote.value.copy(body = event.value)
-                is EditNoteEvent.CategorySelected -> currentNote.value =
+                is EditNoteEvent.OnCategorySelect -> currentNote.value =
                     currentNote.value.copy(category = event.category)
                 is EditNoteEvent.OnAlertDismiss -> currentNote.value =
                     currentNote.value.copy(isEmpty = false)
