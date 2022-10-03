@@ -54,8 +54,8 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
                     if (!search.value.isClearSearchIconVisible) {
                         search.value = search.value.copy(isClearSearchIconVisible = true)
                     }
-                    searchNotes(event.value)
-                    search.value = search.value.copy(searchQuery = event.value)
+                    searchNotes(event.query)
+                    search.value = search.value.copy(searchQuery = event.query)
                 }
                 is HomeScreenEvent.OnClearSearchBox -> {
                     searchNotes("")

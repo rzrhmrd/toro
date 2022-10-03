@@ -6,7 +6,7 @@ import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 
 sealed class HomeScreenEvent {
     data class OnNoteDelete(val note: Note) : HomeScreenEvent()
-    data class OnSearch(val value: String) : HomeScreenEvent()
+    data class OnSearch(val query: String) : HomeScreenEvent()
     object OnUndoNoteDelete : HomeScreenEvent()
     object OnClearSearchBox : HomeScreenEvent()
     object NotificationDisplayed : HomeScreenEvent()

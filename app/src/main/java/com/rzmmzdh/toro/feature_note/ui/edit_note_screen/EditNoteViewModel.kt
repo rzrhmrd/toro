@@ -48,9 +48,9 @@ class EditNoteViewModel @Inject constructor(
             when (event) {
                 is EditNoteEvent.OnNoteSave -> saveNote()
                 is EditNoteEvent.OnTitleChange -> currentNote.value =
-                    currentNote.value.copy(title = event.value)
+                    currentNote.value.copy(title = event.title)
                 is EditNoteEvent.OnBodyChange -> currentNote.value =
-                    currentNote.value.copy(body = event.value)
+                    currentNote.value.copy(body = event.body)
                 is EditNoteEvent.OnCategorySelect -> currentNote.value =
                     currentNote.value.copy(category = event.category)
                 is EditNoteEvent.OnAlertDismiss -> currentNote.value =
