@@ -5,7 +5,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
 data class NoteUiState(
-    val id: Int = 0,
+    val id: Int = -1,
     val title: String = "",
     val body: String = "",
     val category: NoteCategory = NoteCategory.FREE,

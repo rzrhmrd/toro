@@ -5,7 +5,7 @@ import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import kotlinx.datetime.Instant
 
 data class Note(
-    val id: Int = 0,
+    val id: Int = -1,
     val title: String,
     val body: String,
     val category: NoteCategory,

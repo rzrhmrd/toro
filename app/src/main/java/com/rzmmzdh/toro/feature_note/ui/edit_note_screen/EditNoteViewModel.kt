@@ -75,7 +75,6 @@ class EditNoteViewModel @Inject constructor(
             } else {
                 currentNote.value = currentNote.value.copy(isEmpty = false)
                 val newNote = Note(
-
                     title = currentNote.value.title.trim(),
                     body = currentNote.value.body.trim(),
                     category = currentNote.value.category,
