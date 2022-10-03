@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
-import com.rzmmzdh.toro.feature_note.ui.core.Constant.errorMessages
+import com.rzmmzdh.toro.feature_note.ui.core.Constant.emptyNoteAlertMessages
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.feature_note.ui.core.component.ToroNavigationBar
 import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
@@ -157,7 +157,7 @@ private fun EmptyNoteAlert(state: EditNoteViewModel) {
             icon = { Icon(Icons.Rounded.Info, null) },
             title = {
                 Text(
-                    text = errorMessages[Random.nextInt(until = errorMessages.size)],
+                    text = emptyNoteAlertMessages[Random.nextInt(until = emptyNoteAlertMessages.size)],
                     style = MaterialTheme.style.errorBoxTitle,
                     textAlign = TextAlign.Center,
                 )
