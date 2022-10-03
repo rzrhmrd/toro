@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Alignment.Companion.TopStart
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -59,11 +58,11 @@ fun HomeScreen(
         modifier = modifier,
         topBar = {
             SearchableTopBar(
-                title = state.searchQuery.value,
+                title = state.search.value.searchQuery,
                 onValueChange = {
                     state.onEvent(HomeScreenEvent.Search(it))
                 },
-                clearSearchIconVisible = state.clearSearchIconVisible.value,
+                clearSearchIconVisible = state.search.value.isClearSearchIconVisible,
                 onCloseSearchIconClick = {
                     state.onEvent(HomeScreenEvent.ClearSearchBox)
                     coroutineScope.launch {
@@ -101,9 +100,9 @@ fun HomeScreen(
                 )
             }
         )
-        if (state.showNoteDeletionNotification.value) {
+        if (state.showNoteDeleteNotification.value) {
             NoteDeleteNotification(
-                key = { state.showNoteDeletionNotification },
+                key = { state.showNoteDeleteNotification },
                 onDismiss = { state.onEvent(HomeScreenEvent.NotificationDisplayed) },
                 onAction = { state.onEvent(HomeScreenEvent.UndoDeletedNote) },
                 snackbarHostState = snackBarHostState
@@ -301,7 +300,9 @@ private fun NoteTag(tag: String) {
     ) {
         Text(
             tag.substringAfter(delimiter = stringResource(R.string.white_space)).trim(),
-            modifier = Modifier.alpha(0.5F).padding(end = 4.dp),
+            modifier = Modifier
+                .alpha(0.5F)
+                .padding(end = 4.dp),
             style = MaterialTheme.style.noteTag,
             fontSize = 14.sp
         )

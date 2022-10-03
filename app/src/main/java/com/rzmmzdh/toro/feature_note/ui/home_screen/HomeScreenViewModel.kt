@@ -17,21 +17,19 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseCases) :
     ViewModel() {
-    var clearSearchIconVisible = mutableStateOf(false)
-        private set
-    var clearFilterButtonVisible = mutableStateOf(false)
-        private set
-    var notes = mutableStateOf(NoteListUiState())
-        private set
-    var searchQuery = mutableStateOf("")
-        private set
-    var showNoteDeletionNotification = mutableStateOf(false)
+    var search = mutableStateOf(SearchUiState())
         private set
     var searchNotesJob: Job? = null
         private set
-    var deletedNote: Note? = null
+    var clearFilterButtonVisible = mutableStateOf(false)
         private set
     var selectedCategory: MutableState<NoteCategory?> = mutableStateOf(null)
+        private set
+    var notes = mutableStateOf(NoteListUiState())
+        private set
+    var deletedNote: Note? = null
+        private set
+    var showNoteDeleteNotification = mutableStateOf(false)
         private set
 
     init {
@@ -53,28 +51,28 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
                     deleteNote(event)
                 }
                 is HomeScreenEvent.Search -> {
-                    if (!clearSearchIconVisible.value) {
-                        clearSearchIconVisible.value = !clearSearchIconVisible.value
+                    if (!search.value.isClearSearchIconVisible) {
+                        search.value = search.value.copy(isClearSearchIconVisible = true)
                     }
                     searchNotes(event.value)
-                    searchQuery.value = event.value
+                    search.value = search.value.copy(searchQuery = event.value)
                 }
                 is HomeScreenEvent.ClearSearchBox -> {
                     searchNotes("")
-                    clearSearchIconVisible.value = !clearSearchIconVisible.value
+                    search.value = search.value.copy(isClearSearchIconVisible = false)
 
                 }
                 is HomeScreenEvent.UndoDeletedNote,
                 -> {
-                    if (showNoteDeletionNotification.value) {
-                        showNoteDeletionNotification.value = !showNoteDeletionNotification.value
+                    if (showNoteDeleteNotification.value) {
+                        showNoteDeleteNotification.value = !showNoteDeleteNotification.value
                     }
                     deletedNote?.let { noteUseCases.insertNote(it) }
                     deletedNote = null
                 }
                 HomeScreenEvent.NotificationDisplayed -> {
-                    showNoteDeletionNotification.value =
-                        !showNoteDeletionNotification.value
+                    showNoteDeleteNotification.value =
+                        !showNoteDeleteNotification.value
                 }
                 is HomeScreenEvent.OnFilterItemSelected -> {
                     selectedCategory.value = event.filter
@@ -101,13 +99,13 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
     ) {
         deletedNote = event.note
         noteUseCases.deleteNote(event.note)
-        if (showNoteDeletionNotification.value) showNoteDeletionNotification.value =
-            !showNoteDeletionNotification.value
-        showNoteDeletionNotification.value = !showNoteDeletionNotification.value
+        if (showNoteDeleteNotification.value) showNoteDeleteNotification.value =
+            !showNoteDeleteNotification.value
+        showNoteDeleteNotification.value = !showNoteDeleteNotification.value
     }
 
     private fun searchNotes(query: String) {
-        searchQuery.value = query
+        search.value = search.value.copy(searchQuery = query)
         searchNotesJob?.cancel()
         searchNotesJob = viewModelScope.launch {
             delay(500L)

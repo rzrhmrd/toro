@@ -44,7 +44,7 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
             SaveNoteFab(onClick = {
                 state.onEvent(EditNoteEvent.SaveNote)
                 inputFocusManager.clearFocus()
-                if (!state.showAlert.value) {
+                if (!state.currentNote.value.isEmpty) {
                     navController.navigateTo(
                         route = Screen.Home.route
                     )
@@ -61,7 +61,7 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
         EditNoteBody(paddingValues = paddingValues, state, onDone = {
             state.onEvent(EditNoteEvent.SaveNote)
             inputFocusManager.clearFocus()
-            if (!state.showAlert.value) {
+            if (!state.currentNote.value.isEmpty) {
                 navController.navigateTo(Screen.Home.route)
             }
         })
@@ -143,16 +143,16 @@ private fun EditNoteBody(
             },
         )
     }
-    EmptyInputError(state)
+    EmptyNoteAlert(state)
 
 }
 
 @Composable
-private fun EmptyInputError(viewModel: EditNoteViewModel) {
-    if (viewModel.showAlert.value) {
+private fun EmptyNoteAlert(state: EditNoteViewModel) {
+    if (state.currentNote.value.isEmpty) {
         AlertDialog(
             onDismissRequest = {
-                viewModel.onEvent(EditNoteEvent.AlertShown)
+                state.onEvent(EditNoteEvent.OnAlertDismiss)
             },
             icon = { Icon(Icons.Rounded.Info, null) },
             title = {
@@ -165,7 +165,7 @@ private fun EmptyInputError(viewModel: EditNoteViewModel) {
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.onEvent(EditNoteEvent.AlertShown)
+                        state.onEvent(EditNoteEvent.OnAlertDismiss)
                     }
                 ) {
                     Text(stringResource(R.string.ok), style = MaterialTheme.style.errorBoxButton)

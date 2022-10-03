@@ -9,7 +9,6 @@ import com.rzmmzdh.toro.feature_note.domain.usecase.NoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,16 +16,7 @@ class EditNoteViewModel @Inject constructor(
     private val noteUseCases: NoteUseCases,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    var showAlert = mutableStateOf(false)
-        private set
-    var currentNote = mutableStateOf(
-        Note(
-            title = "",
-            body = "",
-            category = NoteCategory.FREE,
-            lastModificationDate = Clock.System.now()
-        )
-    )
+    var currentNote = mutableStateOf(NoteUiState())
         private set
 
     init {
@@ -61,10 +51,10 @@ class EditNoteViewModel @Inject constructor(
                     currentNote.value.copy(title = event.value)
                 is EditNoteEvent.OnBodyChanged -> currentNote.value =
                     currentNote.value.copy(body = event.value)
-                is EditNoteEvent.ShowAlert -> showAlert.value = true
-                is EditNoteEvent.AlertShown -> showAlert.value = false
                 is EditNoteEvent.CategorySelected -> currentNote.value =
                     currentNote.value.copy(category = event.category)
+                is EditNoteEvent.OnAlertDismiss -> currentNote.value =
+                    currentNote.value.copy(isEmpty = false)
             }
         }
 
@@ -73,6 +63,7 @@ class EditNoteViewModel @Inject constructor(
     private suspend fun saveNote() {
         if (currentNote.value.title.isNotBlank() || currentNote.value.body.isNotBlank()) {
             if (currentNote.value.id != -1) {
+                currentNote.value = currentNote.value.copy(isEmpty = false)
                 val existingNote = Note(
                     id = currentNote.value.id,
                     title = currentNote.value.title.trim(),
@@ -82,7 +73,9 @@ class EditNoteViewModel @Inject constructor(
                 )
                 noteUseCases.insertNote(existingNote)
             } else {
+                currentNote.value = currentNote.value.copy(isEmpty = false)
                 val newNote = Note(
+
                     title = currentNote.value.title.trim(),
                     body = currentNote.value.body.trim(),
                     category = currentNote.value.category,
@@ -91,7 +84,7 @@ class EditNoteViewModel @Inject constructor(
                 noteUseCases.insertNote(newNote)
             }
         } else {
-            showAlert.value = !showAlert.value
+            currentNote.value = currentNote.value.copy(isEmpty = true)
         }
     }
 
