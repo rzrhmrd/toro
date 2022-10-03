@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.ui.core.Constant.emptyNoteAlertMessages
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
+import com.rzmmzdh.toro.feature_note.ui.core.component.ToroFab
 import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.style
@@ -40,7 +41,7 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
             })
         },
         floatingActionButton = {
-            SaveNoteFab(onClick = {
+            ToroFab(onClick = {
                 state.onEvent(EditNoteEvent.OnNoteSave)
                 inputFocusManager.clearFocus()
                 if (!state.currentNote.value.isEmpty) {
@@ -48,6 +49,12 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
                         route = Screen.Home.route
                     )
                 }
+            }, icon = {
+                Icon(
+                    Icons.Rounded.Check,
+                    null,
+                    modifier = Modifier.size(32.dp)
+                )
             })
         },
     ) { paddingValues ->
@@ -214,19 +221,4 @@ private fun NoteBodyInput(
             .fillMaxSize()
             .padding(MaterialTheme.size.noteBodyInputPadding),
     )
-}
-
-@Composable
-private fun SaveNoteFab(
-    onClick: () -> Unit,
-) {
-    LargeFloatingActionButton(
-        onClick = onClick,
-    ) {
-        Icon(
-            Icons.Rounded.Check,
-            null,
-            modifier = Modifier.size(36.dp)
-        )
-    }
 }
