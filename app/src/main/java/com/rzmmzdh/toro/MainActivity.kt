@@ -3,6 +3,7 @@ package com.rzmmzdh.toro
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -50,10 +51,17 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = Screen.Home.route,
                             enterTransition = {
-                                fadeIn(tween(500))
+                                slideIntoContainer(
+                                    AnimatedContentScope.SlideDirection.Left,
+                                    animationSpec = tween(500)
+                                )
                             },
                             exitTransition = {
-                                fadeOut(animationSpec = tween(500))
+                                slideOutOfContainer(
+                                    AnimatedContentScope.SlideDirection.Right,
+                                    tween(500)
+                                )
+
                             }) {
                             HomeScreen(navController = navController)
                         }
@@ -64,10 +72,16 @@ class MainActivity : ComponentActivity() {
                                 defaultValue = -1
                             }),
                             enterTransition = {
-                                fadeIn(tween(500))
+                                slideIntoContainer(
+                                    AnimatedContentScope.SlideDirection.Right,
+                                    tween(500)
+                                )
                             },
                             exitTransition = {
-                                fadeOut(animationSpec = tween(500))
+                                slideOutOfContainer(
+                                    AnimatedContentScope.SlideDirection.Left,
+                                    tween(500)
+                                )
                             }
                         ) {
                             EditNoteScreen(navController = navController)
