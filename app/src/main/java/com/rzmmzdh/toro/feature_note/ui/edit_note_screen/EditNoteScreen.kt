@@ -24,7 +24,6 @@ import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.ui.core.Constant.emptyNoteAlertMessages
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
-import com.rzmmzdh.toro.feature_note.ui.core.component.ToroNavigationBar
 import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.style
@@ -51,12 +50,6 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
                 }
             })
         },
-        bottomBar = {
-            ToroNavigationBar(
-                navController = navController,
-                currentScreen = Screen.EditNote
-            )
-        }
     ) { paddingValues ->
         EditNoteBody(paddingValues = paddingValues, state, onDone = {
             state.onEvent(EditNoteEvent.OnNoteSave)

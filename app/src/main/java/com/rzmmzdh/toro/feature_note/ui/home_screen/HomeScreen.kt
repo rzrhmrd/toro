@@ -10,6 +10,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -35,8 +36,6 @@ import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
-import com.rzmmzdh.toro.feature_note.ui.core.component.ToroNavigationBar
-import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
 import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.space
@@ -75,9 +74,7 @@ fun HomeScreen(
                 }
             )
         },
-        bottomBar = {
-            ToroNavigationBar(navController = navController, currentScreen = Screen.Home)
-        },
+        floatingActionButton = { ToroFab(navController) },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
         Notes(
@@ -93,7 +90,7 @@ fun HomeScreen(
                     noteListState.animateScrollToItem(0)
                 }
             }, onNoteClick = {
-                navController.navigateTo(
+                navController.navigate(
                     Screen.EditNote.withNoteId(
                         it.id
                     )
@@ -109,6 +106,13 @@ fun HomeScreen(
             )
         }
 
+    }
+}
+
+@Composable
+fun ToroFab(navController: NavController) {
+    LargeFloatingActionButton(onClick = { navController.navigate(Screen.EditNote.route) }) {
+        Icon(Icons.Rounded.Add, null, modifier = Modifier.size(36.dp))
     }
 }
 
