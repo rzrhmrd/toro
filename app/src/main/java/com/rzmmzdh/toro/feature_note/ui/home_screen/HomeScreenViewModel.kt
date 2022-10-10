@@ -35,6 +35,18 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
 
     init {
         getAllNotes()
+        resetDeletedNote()
+    }
+
+    private fun resetDeletedNote() {
+        viewModelScope.launch {
+            deletedNote?.let {
+                deletedNote = null
+            }
+            deletedNote = null
+            showNoteDeleteNotification.value = false
+
+        }
     }
 
     private fun getAllNotes() {
