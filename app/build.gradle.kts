@@ -3,16 +3,17 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
     kotlin("kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.rzmmzdh.toro"
-    compileSdk = 33
+    compileSdk = 32
 
     defaultConfig {
         applicationId = "com.rzmmzdh.toro"
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 32
         versionCode = 1
         versionName = "0.1"
 
@@ -78,4 +79,5 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
     implementation(libs.kotlinx.dateTime)
+    implementation(libs.firebase.analytics)
 }
