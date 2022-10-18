@@ -371,7 +371,7 @@ private fun NoteDeleteNotification(
             snackbarHostState.showSnackbar(
                 message = "Note deleted.",
                 actionLabel = "Undo",
-                duration = SnackbarDuration.Long
+                duration = SnackbarDuration.Short
             )
         when (noteDeletedMessage) {
             SnackbarResult.Dismissed -> onDismiss()
