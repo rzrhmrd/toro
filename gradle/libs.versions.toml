@@ -13,8 +13,8 @@ hilt = "2.42"
 hilt-navigationCompose = "1.0.0"
 kotlinx-dateTime = "0.4.0"
 accompanist = "0.26.4-beta"
-androidApplicationPlugin = "7.3.0-rc01"
-kotlinAndroidPlugin = "1.6.21"
+firebase-analytics = "20.1.2"
+firebase-crashlytics = "18.3.0"
 
 [libraries]
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
@@ -38,7 +38,6 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 hilt-navigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigationCompose" }
-hilt-androidGradlePlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 kotlinx-dateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-dateTime" }
-
-[plugins]
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }

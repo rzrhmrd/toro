@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,6 +35,18 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
 
     init {
         getAllNotes()
+        resetDeletedNote()
+    }
+
+    private fun resetDeletedNote() {
+        viewModelScope.launch {
+            deletedNote?.let {
+                deletedNote = null
+            }
+            deletedNote = null
+            showNoteDeleteNotification.value = false
+
+        }
     }
 
     private fun getAllNotes() {

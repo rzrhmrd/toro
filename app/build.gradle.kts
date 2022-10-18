@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     kotlin("kapt")
 }
 
@@ -78,4 +80,6 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
     implementation(libs.kotlinx.dateTime)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }

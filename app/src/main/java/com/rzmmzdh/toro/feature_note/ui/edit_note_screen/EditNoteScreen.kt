@@ -1,6 +1,9 @@
 package com.rzmmzdh.toro.feature_note.ui.edit_note_screen
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -206,6 +209,7 @@ private fun NoteBodyInput(
     value: String,
     onValueChange: (String) -> Unit,
 ) {
+    val noteBodyScrollState = rememberScrollState()
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -219,6 +223,7 @@ private fun NoteBodyInput(
         },
         modifier = Modifier
             .fillMaxSize()
-            .padding(MaterialTheme.size.noteBodyInputPadding),
+            .padding(MaterialTheme.size.noteBodyInputPadding)
+            .scrollable(noteBodyScrollState, Orientation.Vertical),
     )
 }
