@@ -14,6 +14,7 @@ hilt-navigationCompose = "1.0.0"
 kotlinx-dateTime = "0.4.0"
 accompanist = "0.26.4-beta"
 firebase-analytics = "20.1.2"
+firebase-crashlytics = "18.3.0"
 
 [libraries]
 ktx-core = { module = "androidx.core:core-ktx", version.ref = "ktx-core" }
@@ -39,3 +40,4 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hil
 hilt-navigationCompose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigationCompose" }
 kotlinx-dateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-dateTime" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }

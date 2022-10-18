@@ -2,18 +2,19 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("dagger.hilt.android.plugin")
-    kotlin("kapt")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+    kotlin("kapt")
 }
 
 android {
     namespace = "com.rzmmzdh.toro"
-    compileSdk = 32
+    compileSdk = 33
 
     defaultConfig {
         applicationId = "com.rzmmzdh.toro"
         minSdk = 21
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "0.1"
 
@@ -80,4 +81,5 @@ dependencies {
     implementation(libs.hilt.navigationCompose)
     implementation(libs.kotlinx.dateTime)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }
