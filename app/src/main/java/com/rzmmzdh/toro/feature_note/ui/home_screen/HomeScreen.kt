@@ -212,7 +212,9 @@ private fun ClearFilter(
                     stringResource(R.string.clear_filter),
                     style = MaterialTheme.style.clearFilter
                 )
-            })
+            },
+            colors = FilterChipDefaults.elevatedFilterChipColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+        )
     }
 }
 
