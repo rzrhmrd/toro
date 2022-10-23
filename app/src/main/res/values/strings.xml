@@ -7,7 +7,7 @@
     <string name="edit_note_icon">edit note icon</string>
     <string name="subject">موضوع</string>
     <string name="body">...</string>
-    <string name="clear_filter">حذف فیلتر 💥</string>
+    <string name="clear_filter">حذف فیلتر</string>
     <string name="ok">باشه</string>
     <string name="white_space">" "</string>
 </resources>
