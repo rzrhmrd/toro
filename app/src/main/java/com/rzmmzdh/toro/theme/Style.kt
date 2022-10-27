@@ -34,13 +34,6 @@ data class Style(
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
     ),
-    val searchableTopBarText: TextStyle = TextStyle(
-        fontFamily = vazirFontFamily,
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
-        textDirection = TextDirection.ContentOrRtl,
-        textAlign = TextAlign.Center
-    ),
     val errorBoxTitle: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
         textDirection = TextDirection.ContentOrRtl,

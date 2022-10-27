@@ -11,7 +11,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -37,6 +36,7 @@ import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
+import com.rzmmzdh.toro.feature_note.ui.core.colorTransition
 import com.rzmmzdh.toro.feature_note.ui.core.component.ToroFab
 import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import com.rzmmzdh.toro.theme.size
@@ -134,14 +134,19 @@ private fun SearchableTopBar(
                 .fillMaxWidth(),
             value = title,
             onValueChange = { onValueChange(it) },
-            textStyle = MaterialTheme.style.searchableTopBarText,
+            textStyle = MaterialTheme.style.topBarTitle,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = { onSearch(title) }),
             placeholder = {
                 Text(
-                    stringResource(id = R.string.toro_title),
-                    style = MaterialTheme.style.topBarTitle,
-                    modifier = Modifier.fillMaxWidth()
+                    text = stringResource(id = R.string.toro_title),
+                    modifier = Modifier.fillMaxWidth(),
+                    color = colorTransition(
+                        initialColor = MaterialTheme.colorScheme.primary,
+                        targetColor = MaterialTheme.colorScheme.secondary,
+                        tweenAnimationDuration = 3000
+                    ),
+                    style = MaterialTheme.style.topBarTitle
                 )
             },
             colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
