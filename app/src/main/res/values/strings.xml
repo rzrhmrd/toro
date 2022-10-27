@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TORO</string>
+    <string name="app_name">Toro</string>
     <string name="toro_title">تورو 🥏</string>
     <string name="save">📌</string>
     <string name="save_note_fab_icon">save note fab</string>
