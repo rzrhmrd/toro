@@ -48,14 +48,14 @@ data class Style(
     ),
     val noteTitleInputValue: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
-        fontSize = 18.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.Medium,
         textDirection = TextDirection.ContentOrRtl,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
     ),
     val noteTitleInputPlaceholder: TextStyle = TextStyle(
         fontFamily = vazirFontFamily,
-        fontSize = 18.sp,
+        fontSize = 20.sp,
         fontWeight = FontWeight.Medium,
         textDirection = TextDirection.ContentOrRtl,
         textAlign = TextAlign.Center
