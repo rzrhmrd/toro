@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -38,8 +39,9 @@ import kotlin.random.Random
 fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: NavController) {
     val inputFocusManager = LocalFocusManager.current
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
-            EditNoteTopBar(title = state.currentNote.value.category.title, onCategoryClick = {
+            EditNoteTopBar(title = state.currentNote.value.category.title, onCategorySelect = {
                 state.onEvent(EditNoteEvent.OnCategorySelect(it))
             })
         },
@@ -61,67 +63,89 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
             })
         },
     ) { paddingValues ->
-        EditNoteBody(paddingValues = paddingValues, state, onDone = {
-            state.onEvent(EditNoteEvent.OnNoteSave)
-            inputFocusManager.clearFocus()
-            if (!state.currentNote.value.isEmpty) {
-                navController.navigateTo(Screen.Home.route)
-            }
-        })
+        EditNoteBody(paddingValues = paddingValues, state)
 
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun EditNoteTopBar(title: String, onCategoryClick: (NoteCategory) -> Unit) {
+private fun EditNoteTopBar(title: String, onCategorySelect: (NoteCategory) -> Unit) {
     val menuExpanded = remember { mutableStateOf(false) }
     TopAppBar(
+        modifier = Modifier.fillMaxWidth(),
         title = {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                IconButton(
-                    onClick = { menuExpanded.value = !menuExpanded.value },
-                ) {
-                    Icon(Icons.Rounded.KeyboardArrowDown, null, modifier = Modifier.size(24.dp))
-                }
-                Text(
-                    text = title,
-                    style = MaterialTheme.style.topBarTitle,
+                Title(title)
+                CategoryDropDown(onClick = { menuExpanded.value = !menuExpanded.value })
+                Categories(
+                    menuExpanded = menuExpanded.value,
+                    onCategoryClick = {
+                        onCategorySelect(it)
+                        menuExpanded.value = !menuExpanded.value
+                    },
+                    onDismissRequest = { menuExpanded.value = !menuExpanded.value }
                 )
             }
-            DropdownMenu(
-                expanded = menuExpanded.value,
-                onDismissRequest = { menuExpanded.value = !menuExpanded.value },
-            ) {
-                val categories = NoteCategory.values()
-                categories.forEach {
-                    DropdownMenuItem(text = {
-                        Text(
-                            text = it.title,
-                            style = MaterialTheme.style.categoryList,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }, onClick = {
-                        onCategoryClick(it)
-                        menuExpanded.value = !menuExpanded.value
-                    })
-                }
-
-            }
-        },
-        modifier = Modifier.fillMaxWidth()
+        }
     )
+}
+
+@Composable
+private fun Title(title: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.style.topBarTitle,
+    )
+}
+
+@Composable
+private fun CategoryDropDown(onClick: () -> Unit) {
+    IconButton(
+        onClick = { onClick() },
+    ) {
+        Icon(Icons.Rounded.KeyboardArrowDown, null, modifier = Modifier.size(24.dp))
+    }
+}
+
+@Composable
+private fun Categories(
+    menuExpanded: Boolean,
+    onCategoryClick: (NoteCategory) -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    DropdownMenu(
+        expanded = menuExpanded,
+        onDismissRequest = { onDismissRequest() },
+        offset = DpOffset(x = 116.dp, y = 0.dp),
+    ) {
+
+        val categories = NoteCategory.values()
+        categories.forEach { category ->
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = category.title,
+                        style = MaterialTheme.style.categoryList,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }, onClick = {
+                    onCategoryClick(category)
+                })
+        }
+
+    }
 }
 
 @Composable
 private fun EditNoteBody(
     paddingValues: PaddingValues,
     state: EditNoteViewModel,
-    onDone: () -> Unit
 ) {
     Column(
         modifier = Modifier
