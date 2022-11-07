@@ -37,7 +37,6 @@ import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.domain.model.Note
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
 import com.rzmmzdh.toro.feature_note.ui.core.colorTransition
-import com.rzmmzdh.toro.feature_note.ui.core.component.ToroFab
 import com.rzmmzdh.toro.feature_note.ui.edit_note_screen.NoteCategory
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.space
@@ -77,13 +76,15 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            ToroFab(onClick = { navController.navigate(Screen.EditNote.route) }, icon = {
-                Icon(
-                    Icons.Rounded.Add,
-                    null,
-                    modifier = Modifier.size(36.dp)
-                )
-            })
+            LargeFloatingActionButton(
+                onClick = { navController.navigate(Screen.EditNote.route) },
+                content = {
+                    Icon(
+                        Icons.Sharp.Add,
+                        null,
+                        modifier = Modifier.size(36.dp)
+                    )
+                })
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
@@ -151,19 +152,6 @@ private fun SearchableTopBar(
             },
             colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
             singleLine = true,
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = clearSearchIconVisible,
-                ) {
-                    Icon(
-                        Icons.Rounded.Close,
-                        null,
-                        modifier = Modifier.clickable(onClick = {
-                            onCloseSearchIconClick()
-                        })
-                    )
-                }
-            }
         )
     })
 }
