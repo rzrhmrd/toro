@@ -77,7 +77,7 @@ private fun EditNoteTopBar(
                     tint = colorTransition(
                         initialColor = MaterialTheme.colorScheme.primary,
                         targetColor = MaterialTheme.colorScheme.tertiary,
-                        tweenAnimationDuration = 2500
+                        tweenAnimationDuration = 5000
                     )
                 )
             }

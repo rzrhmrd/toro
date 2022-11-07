@@ -136,7 +136,7 @@ private fun SearchableTopBar(
                     color = colorTransition(
                         initialColor = MaterialTheme.colorScheme.primary,
                         targetColor = MaterialTheme.colorScheme.tertiary,
-                        tweenAnimationDuration = 2500
+                        tweenAnimationDuration = 5000
                     ),
                     style = MaterialTheme.style.topBarTitle
                 )
