@@ -66,7 +66,7 @@ private fun EditNoteTopBar(
     onSave: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
-    TopAppBar(
+    CenterAlignedTopAppBar(
         modifier = Modifier.fillMaxWidth(),
         actions = {
             IconButton(onClick = { onSave() }) {
@@ -83,22 +83,15 @@ private fun EditNoteTopBar(
             }
         },
         title = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Title(title = title, onClick = { menuExpanded = !menuExpanded })
-                Categories(
-                    menuExpanded = menuExpanded,
-                    onCategoryClick = {
-                        onCategorySelect(it)
-                        menuExpanded = !menuExpanded
-                    },
-                    onDismissRequest = { menuExpanded = !menuExpanded }
-                )
-            }
+            Title(title = title, onClick = { menuExpanded = !menuExpanded })
+            Categories(
+                menuExpanded = menuExpanded,
+                onCategoryClick = {
+                    onCategorySelect(it)
+                    menuExpanded = !menuExpanded
+                },
+                onDismissRequest = { menuExpanded = !menuExpanded }
+            )
         }
     )
 }
@@ -123,7 +116,6 @@ private fun Categories(
     DropdownMenu(
         expanded = menuExpanded,
         onDismissRequest = { onDismissRequest() },
-        offset = DpOffset(x = 116.dp, y = 0.dp),
     ) {
 
         val categories = NoteCategory.values()
