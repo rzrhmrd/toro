@@ -105,15 +105,6 @@ private fun Title(title: String) {
 }
 
 @Composable
-private fun CategoryDropDown(onClick: () -> Unit) {
-    IconButton(
-        onClick = { onClick() },
-    ) {
-        Icon(Icons.Rounded.KeyboardArrowDown, null, modifier = Modifier.size(24.dp))
-    }
-}
-
-@Composable
 private fun Categories(
     menuExpanded: Boolean,
     onCategoryClick: (NoteCategory) -> Unit,
@@ -248,6 +239,7 @@ private fun NoteBodyInput(
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.size.noteBodyInputPadding)
-            .scrollable(noteBodyScrollState, Orientation.Vertical),
+            .scrollable(noteBodyScrollState, Orientation.Vertical)
+            .imePadding(),
     )
 }
