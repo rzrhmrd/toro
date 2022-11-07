@@ -10,4 +10,5 @@
     <string name="clear_filter">حذف فیلتر</string>
     <string name="ok">باشه</string>
     <string name="white_space">" "</string>
+    <string name="save_button">save button</string>
 </resources>

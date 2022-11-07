@@ -1,5 +1,6 @@
 package com.rzmmzdh.toro.feature_note.ui.edit_note_screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -7,13 +8,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.sharp.Done
+import androidx.compose.material.icons.sharp.Info
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -28,7 +27,7 @@ import androidx.navigation.NavController
 import com.rzmmzdh.toro.R
 import com.rzmmzdh.toro.feature_note.ui.core.Constant.emptyNoteAlertMessages
 import com.rzmmzdh.toro.feature_note.ui.core.Screen
-import com.rzmmzdh.toro.feature_note.ui.core.component.ToroFab
+import com.rzmmzdh.toro.feature_note.ui.core.colorTransition
 import com.rzmmzdh.toro.feature_note.ui.core.navigateTo
 import com.rzmmzdh.toro.theme.size
 import com.rzmmzdh.toro.theme.style
@@ -43,10 +42,7 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
         topBar = {
             EditNoteTopBar(title = state.currentNote.value.category.title, onCategorySelect = {
                 state.onEvent(EditNoteEvent.OnCategorySelect(it))
-            })
-        },
-        floatingActionButton = {
-            ToroFab(onClick = {
+            }, onSave = {
                 state.onEvent(EditNoteEvent.OnNoteSave)
                 inputFocusManager.clearFocus()
                 if (!state.currentNote.value.isEmpty) {
@@ -54,12 +50,6 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
                         route = Screen.Home.route
                     )
                 }
-            }, icon = {
-                Icon(
-                    Icons.Rounded.Check,
-                    null,
-                    modifier = Modifier.size(32.dp)
-                )
             })
         },
     ) { paddingValues ->
@@ -70,10 +60,28 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun EditNoteTopBar(title: String, onCategorySelect: (NoteCategory) -> Unit) {
-    val menuExpanded = remember { mutableStateOf(false) }
+private fun EditNoteTopBar(
+    title: String,
+    onCategorySelect: (NoteCategory) -> Unit,
+    onSave: () -> Unit
+) {
+    var menuExpanded by remember { mutableStateOf(false) }
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
+        actions = {
+            IconButton(onClick = { onSave() }) {
+                Icon(
+                    Icons.Sharp.Done,
+                    stringResource(R.string.save_button),
+                    modifier = Modifier.size(32.dp),
+                    tint = colorTransition(
+                        initialColor = MaterialTheme.colorScheme.primary,
+                        targetColor = MaterialTheme.colorScheme.tertiary,
+                        tweenAnimationDuration = 2500
+                    )
+                )
+            }
+        },
         title = {
             Row(
                 modifier = Modifier
@@ -81,15 +89,14 @@ private fun EditNoteTopBar(title: String, onCategorySelect: (NoteCategory) -> Un
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-                Title(title)
-                CategoryDropDown(onClick = { menuExpanded.value = !menuExpanded.value })
+                Title(title = title, onClick = { menuExpanded = !menuExpanded })
                 Categories(
-                    menuExpanded = menuExpanded.value,
+                    menuExpanded = menuExpanded,
                     onCategoryClick = {
                         onCategorySelect(it)
-                        menuExpanded.value = !menuExpanded.value
+                        menuExpanded = !menuExpanded
                     },
-                    onDismissRequest = { menuExpanded.value = !menuExpanded.value }
+                    onDismissRequest = { menuExpanded = !menuExpanded }
                 )
             }
         }
@@ -97,8 +104,11 @@ private fun EditNoteTopBar(title: String, onCategorySelect: (NoteCategory) -> Un
 }
 
 @Composable
-private fun Title(title: String) {
+private fun Title(title: String, onClick: () -> Unit) {
     Text(
+        modifier = Modifier
+            .clickable { onClick() }
+            .padding(8.dp),
         text = title,
         style = MaterialTheme.style.topBarTitle,
     )
@@ -172,7 +182,7 @@ private fun EmptyNoteAlert(state: EditNoteViewModel) {
             onDismissRequest = {
                 state.onEvent(EditNoteEvent.OnAlertDismiss)
             },
-            icon = { Icon(Icons.Rounded.Info, null) },
+            icon = { Icon(Icons.Sharp.Info, null) },
             title = {
                 Text(
                     text = emptyNoteAlertMessages[Random.nextInt(until = emptyNoteAlertMessages.size)],
