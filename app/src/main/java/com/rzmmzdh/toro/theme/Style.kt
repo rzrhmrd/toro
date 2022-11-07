@@ -79,7 +79,7 @@ data class Style(
         fontSize = 20.sp,
         fontWeight = FontWeight.Medium,
         textDirection = TextDirection.ContentOrRtl,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Left
     ),
 
     val categoryItem: TextStyle = TextStyle(
