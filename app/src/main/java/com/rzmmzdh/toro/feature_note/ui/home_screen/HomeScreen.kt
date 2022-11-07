@@ -10,8 +10,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.sharp.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,14 +62,7 @@ fun HomeScreen(
                 onValueChange = {
                     state.onEvent(HomeScreenEvent.OnSearch(it))
                 },
-                clearSearchIconVisible = state.search.value.isClearSearchIconVisible,
-                onCloseSearchIconClick = {
-                    state.onEvent(HomeScreenEvent.OnClearSearchBox)
-                    coroutineScope.launch {
-                        noteListState.animateScrollToItem(0)
-                    }
-                    inputFocusManager.clearFocus()
-                }, onSearch = {
+                onSearch = {
                     state.onEvent(HomeScreenEvent.OnSearch(it))
                     inputFocusManager.clearFocus()
                 }
@@ -125,8 +118,6 @@ fun HomeScreen(
 private fun SearchableTopBar(
     title: String,
     onValueChange: (String) -> Unit,
-    clearSearchIconVisible: Boolean = false,
-    onCloseSearchIconClick: () -> Unit,
     onSearch: (String) -> Unit
 ) {
     CenterAlignedTopAppBar(title = {
@@ -144,8 +135,8 @@ private fun SearchableTopBar(
                     modifier = Modifier.fillMaxWidth(),
                     color = colorTransition(
                         initialColor = MaterialTheme.colorScheme.primary,
-                        targetColor = MaterialTheme.colorScheme.secondary,
-                        tweenAnimationDuration = 3000
+                        targetColor = MaterialTheme.colorScheme.tertiary,
+                        tweenAnimationDuration = 2500
                     ),
                     style = MaterialTheme.style.topBarTitle
                 )
