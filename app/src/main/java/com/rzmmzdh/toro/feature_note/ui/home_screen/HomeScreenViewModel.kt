@@ -22,10 +22,6 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
         private set
     var searchNotesJob: Job? = null
         private set
-    var clearFilterButtonVisible = mutableStateOf(false)
-        private set
-    var selectedCategory: MutableState<NoteCategory?> = mutableStateOf(null)
-        private set
     var notes = mutableStateOf(NoteListUiState())
         private set
     var deletedNote: Note? = null
@@ -88,17 +84,13 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
                         !showNoteDeleteNotification.value
                 }
                 is HomeScreenEvent.OnFilterItemSelect -> {
-                    selectedCategory.value = event.filter
                     viewModelScope.launch {
                         noteUseCases.getNotesByCategory(event.filter).collectLatest {
                             notes.value = notes.value.copy(notes = it)
                         }
                     }
-                    clearFilterButtonVisible.value = true
                 }
                 is HomeScreenEvent.OnClearFilter -> {
-                    selectedCategory.value = null
-                    clearFilterButtonVisible.value = !clearFilterButtonVisible.value
                     noteUseCases.getAllNotes().collectLatest {
                         notes.value = notes.value.copy(notes = it)
                     }

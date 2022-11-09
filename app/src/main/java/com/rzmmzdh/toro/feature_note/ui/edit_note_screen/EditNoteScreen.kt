@@ -20,7 +20,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -35,10 +34,14 @@ import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: NavController) {
+fun EditNoteScreen(
+    modifier: Modifier = Modifier,
+    state: EditNoteViewModel = hiltViewModel(),
+    navController: NavController
+) {
     val inputFocusManager = LocalFocusManager.current
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             EditNoteTopBar(title = state.currentNote.value.category.title, onCategorySelect = {
                 state.onEvent(EditNoteEvent.OnCategorySelect(it))
@@ -53,7 +56,15 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
             })
         },
     ) { paddingValues ->
-        EditNoteBody(paddingValues = paddingValues, state)
+        EditNoteBody(
+            paddingValues = paddingValues,
+            title = state.currentNote.value.title,
+            onTitleValueChange = { state.onEvent(EditNoteEvent.OnTitleChange(it)) },
+            body = state.currentNote.value.body,
+            onBodyValueChange = { state.onEvent(EditNoteEvent.OnBodyChange(it)) },
+            isNoteEmpty = state.currentNote.value.isEmpty,
+            onEmptyNoteAlertDismiss = { state.onEvent(EditNoteEvent.OnAlertDismiss) }
+        )
 
     }
 }
@@ -61,13 +72,14 @@ fun EditNoteScreen(state: EditNoteViewModel = hiltViewModel(), navController: Na
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditNoteTopBar(
+    modifier: Modifier = Modifier,
     title: String,
     onCategorySelect: (NoteCategory) -> Unit,
     onSave: () -> Unit
 ) {
     var menuExpanded by remember { mutableStateOf(false) }
     CenterAlignedTopAppBar(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         actions = {
             IconButton(onClick = { onSave() }) {
                 Icon(
@@ -97,9 +109,9 @@ private fun EditNoteTopBar(
 }
 
 @Composable
-private fun Title(title: String, onClick: () -> Unit) {
+private fun Title(modifier: Modifier = Modifier, title: String, onClick: () -> Unit) {
     Text(
-        modifier = Modifier
+        modifier = modifier
             .clickable { onClick() }
             .padding(8.dp),
         text = title,
@@ -109,6 +121,7 @@ private fun Title(title: String, onClick: () -> Unit) {
 
 @Composable
 private fun Categories(
+    modifier: Modifier = Modifier,
     menuExpanded: Boolean,
     onCategoryClick: (NoteCategory) -> Unit,
     onDismissRequest: () -> Unit
@@ -137,11 +150,17 @@ private fun Categories(
 
 @Composable
 private fun EditNoteBody(
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    state: EditNoteViewModel,
+    title: String,
+    onTitleValueChange: (String) -> Unit,
+    body: String,
+    onBodyValueChange: (String) -> Unit,
+    isNoteEmpty: Boolean,
+    onEmptyNoteAlertDismiss: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(
                 top = paddingValues.calculateTopPadding(),
@@ -152,28 +171,29 @@ private fun EditNoteBody(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        NoteTitleInput(value = state.currentNote.value.title, onValueChange = {
-            state.onEvent(EditNoteEvent.OnTitleChange(it))
-        })
+        NoteTitleInput(value = title, onValueChange = onTitleValueChange)
         NoteBodyInput(
-            value =
-            state.currentNote.value.body,
-            onValueChange = {
-                state.onEvent(EditNoteEvent.OnBodyChange(it))
-            },
+            value = body,
+            onValueChange = onBodyValueChange,
         )
     }
-    EmptyNoteAlert(state)
+    EmptyNoteAlert(
+        isNoteEmpty = isNoteEmpty,
+        onDismiss = onEmptyNoteAlertDismiss
+    )
 
 }
 
 @Composable
-private fun EmptyNoteAlert(state: EditNoteViewModel) {
-    if (state.currentNote.value.isEmpty) {
+private fun EmptyNoteAlert(
+    modifier: Modifier = Modifier,
+    isNoteEmpty: Boolean,
+    onDismiss: () -> Unit
+) {
+    if (isNoteEmpty) {
         AlertDialog(
-            onDismissRequest = {
-                state.onEvent(EditNoteEvent.OnAlertDismiss)
-            },
+            modifier = modifier,
+            onDismissRequest = onDismiss,
             icon = { Icon(Icons.Sharp.Info, null) },
             title = {
                 Text(
@@ -184,9 +204,7 @@ private fun EmptyNoteAlert(state: EditNoteViewModel) {
             },
             confirmButton = {
                 TextButton(
-                    onClick = {
-                        state.onEvent(EditNoteEvent.OnAlertDismiss)
-                    }
+                    onClick = onDismiss
                 ) {
                     Text(stringResource(R.string.ok), style = MaterialTheme.style.errorBoxButton)
                 }
@@ -197,9 +215,17 @@ private fun EmptyNoteAlert(state: EditNoteViewModel) {
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
+private fun NoteTitleInput(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
     val inputFocusManager = LocalFocusManager.current
     TextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(MaterialTheme.size.noteTitleInputHeight)
+            .padding(MaterialTheme.size.noteTitleInputPadding),
         value = value,
         onValueChange = onValueChange,
         textStyle = MaterialTheme.style.noteTitleInputValue,
@@ -213,21 +239,23 @@ private fun NoteTitleInput(value: String, onValueChange: (String) -> Unit) {
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         keyboardActions = KeyboardActions(onNext = { inputFocusManager.moveFocus(FocusDirection.Down) }),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(MaterialTheme.size.noteTitleInputHeight)
-            .padding(MaterialTheme.size.noteTitleInputPadding),
     )
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun NoteBodyInput(
+    modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
 ) {
     val noteBodyScrollState = rememberScrollState()
     TextField(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(MaterialTheme.size.noteBodyInputPadding)
+            .scrollable(noteBodyScrollState, Orientation.Vertical)
+            .imePadding(),
         value = value,
         onValueChange = onValueChange,
         textStyle = MaterialTheme.style.noteBodyInputValue,
@@ -238,10 +266,5 @@ private fun NoteBodyInput(
                 modifier = Modifier.fillMaxWidth()
             )
         },
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(MaterialTheme.size.noteBodyInputPadding)
-            .scrollable(noteBodyScrollState, Orientation.Vertical)
-            .imePadding(),
     )
 }

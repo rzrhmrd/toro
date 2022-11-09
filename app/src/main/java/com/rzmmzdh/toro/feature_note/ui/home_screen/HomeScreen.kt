@@ -13,10 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.sharp.Add
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.BottomEnd
@@ -81,25 +78,36 @@ fun HomeScreen(
         },
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
     ) { paddingValues ->
+
+        var selectedNoteCategory: NoteCategory? by remember { mutableStateOf(null) }
+        var clearFilterButtonVisible by remember { mutableStateOf(false) }
+
         Notes(
             paddingValues = paddingValues,
-            state = state,
+            notes = state.notes.value.notes,
             noteListState = noteListState,
             onFilterItemSelected = {
                 state.onEvent(HomeScreenEvent.OnFilterItemSelect(it))
                 coroutineScope.launch { noteListState.animateScrollToItem(0) }
-            }, onClearFilter = {
+                selectedNoteCategory = it
+                clearFilterButtonVisible = true
+            },
+            clearFilterButtonVisible = clearFilterButtonVisible,
+            onClearFilter = {
                 state.onEvent(HomeScreenEvent.OnClearFilter)
                 coroutineScope.launch {
                     noteListState.animateScrollToItem(0)
                 }
+                clearFilterButtonVisible = !clearFilterButtonVisible
+                selectedNoteCategory = null
             }, onNoteClick = {
                 navController.navigate(
                     Screen.EditNote.withNoteId(
                         it.id
                     )
                 )
-            }
+            }, onNoteDelete = { state.onEvent(HomeScreenEvent.OnNoteDelete(it)) },
+            selectedCategory = selectedNoteCategory
         )
         if (state.showNoteDeleteNotification.value) {
             NoteDeleteNotification(
@@ -116,47 +124,54 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchableTopBar(
+    modifier: Modifier = Modifier,
     title: String,
     onValueChange: (String) -> Unit,
     onSearch: (String) -> Unit
 ) {
-    CenterAlignedTopAppBar(title = {
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = title,
-            onValueChange = { onValueChange(it) },
-            textStyle = MaterialTheme.style.topBarTitle,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = { onSearch(title) }),
-            placeholder = {
-                Text(
-                    text = stringResource(id = R.string.toro_title),
-                    modifier = Modifier.fillMaxWidth(),
-                    color = colorTransition(
-                        initialColor = MaterialTheme.colorScheme.primary,
-                        targetColor = MaterialTheme.colorScheme.tertiary,
-                        tweenAnimationDuration = 5000
-                    ),
-                    style = MaterialTheme.style.topBarTitle
-                )
-            },
-            colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
-            singleLine = true,
-        )
-    })
+    CenterAlignedTopAppBar(
+        modifier = modifier,
+        title = {
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                value = title,
+                onValueChange = { onValueChange(it) },
+                textStyle = MaterialTheme.style.topBarTitle,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { onSearch(title) }),
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.toro_title),
+                        modifier = Modifier.fillMaxWidth(),
+                        color = colorTransition(
+                            initialColor = MaterialTheme.colorScheme.primary,
+                            targetColor = MaterialTheme.colorScheme.tertiary,
+                            tweenAnimationDuration = 5000
+                        ),
+                        style = MaterialTheme.style.topBarTitle
+                    )
+                },
+                colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent),
+                singleLine = true,
+            )
+        })
 }
 
 @Composable
 private fun Notes(
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    state: HomeScreenViewModel,
+    notes: List<Note>,
     noteListState: LazyGridState,
+    selectedCategory: NoteCategory?,
     onFilterItemSelected: (NoteCategory) -> Unit,
+    clearFilterButtonVisible: Boolean,
     onClearFilter: () -> Unit,
-    onNoteClick: (Note) -> Unit
+    onNoteClick: (Note) -> Unit,
+    onNoteDelete: (Note) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = BottomCenter) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = BottomCenter) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -165,32 +180,42 @@ private fun Notes(
                     bottom = paddingValues.calculateBottomPadding()
                 )
         ) {
-            NoteFilter(state, onFilterItemSelected)
+            NoteFilter(
+                selectedCategory = selectedCategory,
+                onFilterItemSelected = {
+                    onFilterItemSelected(it)
+                },
+            )
             NoteList(
                 listState = noteListState,
-                notes = state.notes.value.notes,
+                notes = notes,
                 onNoteClick = onNoteClick,
-                onNoteDelete = { state.onEvent(HomeScreenEvent.OnNoteDelete(it)) },
+                onNoteDelete = onNoteDelete,
             )
         }
-        ClearFilter(state, paddingValues, onClearFilter)
+        ClearFilter(
+            paddingValues = paddingValues,
+            onClearFilter = onClearFilter,
+            clearFilterButtonVisible = clearFilterButtonVisible
+        )
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun ClearFilter(
-    state: HomeScreenViewModel,
+    modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    onClearFilter: () -> Unit
+    onClearFilter: () -> Unit,
+    clearFilterButtonVisible: Boolean
 ) {
     AnimatedVisibility(
-        visible = state.clearFilterButtonVisible.value,
+        visible = clearFilterButtonVisible,
     ) {
         ElevatedFilterChip(
-            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+            modifier = modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             selected = false,
-            onClick = onClearFilter,
+            onClick = { onClearFilter() },
             label = {
                 Text(
                     stringResource(R.string.clear_filter),
@@ -205,11 +230,12 @@ private fun ClearFilter(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun NoteFilter(
-    state: HomeScreenViewModel,
-    onFilterItemSelected: (NoteCategory) -> Unit
+    modifier: Modifier = Modifier,
+    selectedCategory: NoteCategory?,
+    onFilterItemSelected: (NoteCategory) -> Unit,
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
             .padding(start = 8.dp, end = 8.dp)
@@ -226,8 +252,10 @@ private fun NoteFilter(
                         style = MaterialTheme.style.categoryItem
                     )
                 },
-                selected = (category == state.selectedCategory.value),
-                onClick = { onFilterItemSelected(category) },
+                selected = (category == selectedCategory),
+                onClick = {
+                    onFilterItemSelected(category)
+                },
             )
         }
     }
@@ -236,20 +264,21 @@ private fun NoteFilter(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun NoteList(
+    modifier: Modifier = Modifier,
     listState: LazyGridState,
     notes: List<Note>,
     onNoteClick: (Note) -> Unit,
     onNoteDelete: (Note) -> Unit,
 ) {
     LazyVerticalGrid(
-        state = listState,
-        columns = GridCells.Fixed(2),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(
                 start = MaterialTheme.size.noteCardListPadding,
                 end = MaterialTheme.size.noteCardListPadding
-            )
+            ),
+        state = listState,
+        columns = GridCells.Fixed(2)
     ) {
         items(items = notes, key = { it.id }) {
             Card(
@@ -286,9 +315,9 @@ private fun NoteList(
 }
 
 @Composable
-private fun NoteTag(tag: String) {
+private fun NoteTag(modifier: Modifier = Modifier, tag: String) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(), contentAlignment = BottomEnd
     ) {
         Text(
@@ -304,10 +333,11 @@ private fun NoteTag(tag: String) {
 
 @Composable
 private fun NoteDeleteButton(
+    modifier: Modifier = Modifier,
     onDeleteIconClick: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(), contentAlignment = TopStart
     ) {
         IconButton(
@@ -325,18 +355,20 @@ private fun NoteDeleteButton(
 }
 
 @Composable
-private fun NoteTitle(note: Note) {
+private fun NoteTitle(modifier: Modifier = Modifier, note: Note) {
     Text(
-        note.title,
+        modifier = modifier,
+        text = note.title,
         style = MaterialTheme.style.noteCardTitle, maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
 }
 
 @Composable
-private fun NoteBody(note: Note) {
+private fun NoteBody(modifier: Modifier = Modifier, note: Note) {
     Text(
-        note.body,
+        modifier = modifier,
+        text = note.body,
         style =
         MaterialTheme.style.noteCardBody,
         maxLines = 3,
@@ -347,6 +379,7 @@ private fun NoteBody(note: Note) {
 
 @Composable
 private fun NoteDeleteNotification(
+    modifier: Modifier = Modifier,
     key: Any,
     onDismiss: () -> Unit,
     onAction: () -> Unit,
