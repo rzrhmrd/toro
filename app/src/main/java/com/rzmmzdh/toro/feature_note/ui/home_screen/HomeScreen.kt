@@ -81,6 +81,8 @@ fun HomeScreen(
 
         var selectedNoteCategory: NoteCategory? by remember { mutableStateOf(null) }
         var clearFilterButtonVisible by remember { mutableStateOf(false) }
+        var noteDeleteNotificationVisible by remember { mutableStateOf(false) }
+
 
         Notes(
             paddingValues = paddingValues,
@@ -106,15 +108,21 @@ fun HomeScreen(
                         it.id
                     )
                 )
-            }, onNoteDelete = { state.onEvent(HomeScreenEvent.OnNoteDelete(it)) },
+            }, onNoteDelete = {
+                state.onEvent(HomeScreenEvent.OnNoteDelete(it))
+                noteDeleteNotificationVisible = true
+            },
             selectedCategory = selectedNoteCategory
         )
-        if (state.showNoteDeleteNotification.value) {
+        if (noteDeleteNotificationVisible) {
             NoteDeleteNotification(
-                key = { state.showNoteDeleteNotification },
-                onDismiss = { state.onEvent(HomeScreenEvent.NotificationDisplayed) },
-                onAction = { state.onEvent(HomeScreenEvent.OnUndoNoteDelete) },
-                snackbarHostState = snackBarHostState
+                key = { noteDeleteNotificationVisible },
+                onDismiss = { noteDeleteNotificationVisible = false },
+                onAction = {
+                    state.onEvent(HomeScreenEvent.OnUndoNoteDelete)
+                    if (noteDeleteNotificationVisible) noteDeleteNotificationVisible = false
+                },
+                snackbarHostState = snackBarHostState,
             )
         }
 
@@ -394,7 +402,9 @@ private fun NoteDeleteNotification(
             )
         when (noteDeletedMessage) {
             SnackbarResult.Dismissed -> onDismiss()
-            SnackbarResult.ActionPerformed -> onAction()
+            SnackbarResult.ActionPerformed -> {
+                onAction()
+            }
         }
 
     }

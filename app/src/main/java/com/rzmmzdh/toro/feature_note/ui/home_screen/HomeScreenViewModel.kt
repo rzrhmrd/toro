@@ -26,8 +26,6 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
         private set
     var deletedNote: Note? = null
         private set
-    var showNoteDeleteNotification = mutableStateOf(false)
-        private set
 
     init {
         getAllNotes()
@@ -40,7 +38,6 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
                 deletedNote = null
             }
             deletedNote = null
-            showNoteDeleteNotification.value = false
 
         }
     }
@@ -73,16 +70,10 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
                 }
                 is HomeScreenEvent.OnUndoNoteDelete,
                 -> {
-                    if (showNoteDeleteNotification.value) {
-                        showNoteDeleteNotification.value = !showNoteDeleteNotification.value
-                    }
                     deletedNote?.let { noteUseCases.insertNote(it) }
                     deletedNote = null
                 }
-                HomeScreenEvent.NotificationDisplayed -> {
-                    showNoteDeleteNotification.value =
-                        !showNoteDeleteNotification.value
-                }
+                HomeScreenEvent.NotificationDisplayed -> {}
                 is HomeScreenEvent.OnFilterItemSelect -> {
                     viewModelScope.launch {
                         noteUseCases.getNotesByCategory(event.filter).collectLatest {
@@ -104,9 +95,6 @@ class HomeScreenViewModel @Inject constructor(private val noteUseCases: NoteUseC
     ) {
         deletedNote = event.note
         noteUseCases.deleteNote(event.note)
-        if (showNoteDeleteNotification.value) showNoteDeleteNotification.value =
-            !showNoteDeleteNotification.value
-        showNoteDeleteNotification.value = !showNoteDeleteNotification.value
     }
 
     private fun searchNotes(query: String) {
